@@ -41,6 +41,27 @@ def setProfileFoundationName(foundationName):
     foundationInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtFName")
     foundationInput.send_keys(foundationName)
 
+# Find and goes to 'Foundation Search' tab
+def navigateFoundationSearch():
+    print("Navigating Foundation Search page")
+    driver.find_element(By.LINK_TEXT, "Foundation Search").click()
+
+# Sets 'foundation name' search criteria for Foundation Search
+def setFoundationFoundationName(foundationName):
+    foundationInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtFName")
+    foundationInput.send_keys(foundationName)
+
+# Sets 'Funder Designation' search criteria for Foundation Search
+# TODO: hovering but not selecting
+def setFoundationFunderDesignation(designation):
+    designationSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lstTOGCodeCA"))
+    designationSelector.select_by_visible_text(designation)
+
+# Sets 'Sort by' search criteria for Foundation Search
+def setFoundationSortBy(property):
+    sortSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_ddlViewBy"))
+    sortSelector.select_by_visible_text(property)
+
 # Searches
 def search():
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
@@ -52,18 +73,41 @@ def keywordSearchNumResults():
 
 
 if __name__ == "__main__":
+    ## ---------- Foundation Profile Keyword Search ----------
+    # fsOpen()
+    #
+    # input("Press Enter to go to login...")
+    # fsLogin(fs_username, fs_password)
+    #
+    # input("Press Enter to go to the Profile Keyword Search page...")
+    # navigateProfileKeywordSearch()
+    #
+    # # input("Press Enter to search by keyword...")
+    # # setProfileKeyword("gates")
+    # input("Press Enter to search by foundation name...")
+    # setProfileFoundationName("ford")
+    #
+    # input("Press Enter to search...")
+    # search()
+    #
+    # input("Press Enter to close the browser...")
+    # driver.quit()
+
+    ## ---------- Foundation Search ----------
     fsOpen()
 
     input("Press Enter to go to login...")
     fsLogin(fs_username, fs_password)
 
-    input("Press Enter to go to the Profile Keyword Search page...")
-    navigateProfileKeywordSearch()
+    input("Press Enter to go to the Foundation Search page...")
+    navigateFoundationSearch()
 
-    # input("Press Enter to search by keyword...")
-    # setProfileKeyword("gates")
-    input("Press Enter to search by foundation name...")
-    setProfileFoundationName("ford")
+    # input("Press Enter to search by foundation name...")
+    # setFoundationFoundationName("ford")
+    # input("Press Enter to search by funder designation...")
+    # setFoundationFunderDesignation("Private Foundations")
+    input("Press Enter to sort by...")
+    setFoundationSortBy("City")
 
     input("Press Enter to search...")
     search()
