@@ -66,7 +66,7 @@ def setFoundationFunderDesignationOne(designation1):
 
 
 # Sets 'funder designation' search criteria for Foundation Search
-def setFoundationFunderDesignationThree(designation1, designation2):
+def setFoundationFunderDesignationTwo(designation1, designation2):
     designationSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lstTOGCodeCA"))
     designationSelector.deselect_all()                             # deselects the inital 'all foundations' option
 
@@ -135,6 +135,8 @@ if __name__ == "__main__":
     # setFoundationFoundationName("ford")
     input("Press Enter to search by funder designation...")
     setFoundationFunderDesignationOne("Charitable Organizations")
+    # input("Press Enter to search by funder designation...")
+    # setFoundationFunderDesignationTwo("Public Foundations", "Community Foundations")
     # input("Press Enter to search by funder designation...")
     # setFoundationFunderDesignationThree("Charitable Organizations", "Public Foundations", "Private Foundations")
     # input("Press Enter to sort by...")
