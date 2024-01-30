@@ -8,26 +8,65 @@ fs_password = ""                 # change this to valid password (string)
 chromeOptions = webdriver.ChromeOptions()
 chromeOptions.add_argument("--incognito")
 driver = webdriver.Chrome()
-driver.get("https://www.foundationsearch.ca")
 
+
+# Opens Foundation Search webpage
+def fsOpen():
+    print("Opening Foundation Search")
+    driver.get("https://www.foundationsearch.ca")
+
+# Logs in with given username and password
 def fsLogin(username, password):
     driver.find_element(By.CLASS_NAME, "header--login").click()
 
-    input("Press Enter to input username...")
-    inputUsername = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtUsername")
-    inputUsername.send_keys(fs_username)
+    usernameInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtUsername")
+    passwordInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtPassword")
 
-    input("Press Enter to input password...")
-    inputPassword = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtPassword")
-    inputPassword.send_keys(fs_password)
+    usernameInput.send_keys(fs_username)
+    passwordInput.send_keys(fs_password)
+    driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_btnLogin").click()
 
-    input("Press Enter to login...")
-    loginButton = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_btnLogin")
-    loginButton.click()
+# Finds and goes to 'Foundation Profile Keyword Search' tab
+def navigateProfileKeywordSearch():
+    print("Navigating Profile Keyword Search page")
+    driver.find_element(By.LINK_TEXT, "Foundation Profile Keyword Search").click()
+
+# Sets 'keyword search' search criteria for Foundation Profile Keyword Search
+def setProfileKeyword(keyword):
+    keywordInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtKeywordSearch")
+    keywordInput.send_keys(keyword)
+
+# Sets 'foundation name' search criteria for Foundation Profile Keyword Search
+def setProfileFoundationName(foundationName):
+    foundationInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtFName")
+    foundationInput.send_keys(foundationName)
+
+# Searches
+def search():
+    driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
+
+# Returns the number of results found from Foundation Profile Keyword Search
+def keywordSearchNumResults():
+    summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
+    return int(summary[19:])
+
 
 if __name__ == "__main__":
-    print("opening Foundation Search")
-    input("Press Enter to go to the login page...")
+    fsOpen()
+
+    input("Press Enter to go to login...")
     fsLogin(fs_username, fs_password)
+
+    input("Press Enter to go to the Profile Keyword Search page...")
+    navigateProfileKeywordSearch()
+
+    # input("Press Enter to search by keyword...")
+    # setProfileKeyword("gates")
+    input("Press Enter to search by foundation name...")
+    setProfileFoundationName("ford")
+
+    input("Press Enter to search...")
+    search()
+
     input("Press Enter to close the browser...")
     driver.quit()
