@@ -15,6 +15,7 @@ def fsOpen():
     print("Opening Foundation Search")
     driver.get("https://www.foundationsearch.ca")
 
+
 # Logs in with given username and password
 def fsLogin(username, password):
     driver.find_element(By.CLASS_NAME, "header--login").click()
@@ -26,45 +27,73 @@ def fsLogin(username, password):
     passwordInput.send_keys(fs_password)
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_btnLogin").click()
 
+
 # Finds and goes to 'Foundation Profile Keyword Search' tab
 def navigateProfileKeywordSearch():
     print("Navigating Profile Keyword Search page")
     driver.find_element(By.LINK_TEXT, "Foundation Profile Keyword Search").click()
+
 
 # Sets 'keyword search' search criteria for Foundation Profile Keyword Search
 def setProfileKeyword(keyword):
     keywordInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtKeywordSearch")
     keywordInput.send_keys(keyword)
 
+
 # Sets 'foundation name' search criteria for Foundation Profile Keyword Search
 def setProfileFoundationName(foundationName):
     foundationInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtFName")
     foundationInput.send_keys(foundationName)
 
-# Find and goes to 'Foundation Search' tab
+
+# Finds and goes to 'Foundation Search' tab
 def navigateFoundationSearch():
     print("Navigating Foundation Search page")
     driver.find_element(By.LINK_TEXT, "Foundation Search").click()
+
 
 # Sets 'foundation name' search criteria for Foundation Search
 def setFoundationFoundationName(foundationName):
     foundationInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtFName")
     foundationInput.send_keys(foundationName)
 
-# Sets 'Funder Designation' search criteria for Foundation Search
-# TODO: hovering but not selecting
-def setFoundationFunderDesignation(designation):
-    designationSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lstTOGCodeCA"))
-    designationSelector.select_by_visible_text(designation)
 
-# Sets 'Sort by' search criteria for Foundation Search
+# Sets 'funder designation' search criteria for Foundation Search
+def setFoundationFunderDesignationOne(designation1):
+    designationSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lstTOGCodeCA"))
+    designationSelector.deselect_all()                             # deselects the inital 'all foundations' option
+    designationSelector.select_by_visible_text(designation1)
+
+
+# Sets 'funder designation' search criteria for Foundation Search
+def setFoundationFunderDesignationThree(designation1, designation2):
+    designationSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lstTOGCodeCA"))
+    designationSelector.deselect_all()                             # deselects the inital 'all foundations' option
+
+    designationSelector.select_by_visible_text(designation1)
+    designationSelector.select_by_visible_text(designation2)
+
+
+# Sets 'funder designation' search criteria for Foundation Search
+def setFoundationFunderDesignationThree(designation1, designation2, designation3):
+    designationSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lstTOGCodeCA"))
+    designationSelector.deselect_all()                             # deselects the inital 'all foundations' option
+
+    designationSelector.select_by_visible_text(designation1)
+    designationSelector.select_by_visible_text(designation2)
+    designationSelector.select_by_visible_text(designation3)
+
+
+# Sets 'sort by' search criteria for Foundation Search
 def setFoundationSortBy(property):
     sortSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_ddlViewBy"))
     sortSelector.select_by_visible_text(property)
 
+
 # Searches
 def search():
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
+
 
 # Returns the number of results found from Foundation Profile Keyword Search
 def keywordSearchNumResults():
@@ -104,10 +133,14 @@ if __name__ == "__main__":
 
     # input("Press Enter to search by foundation name...")
     # setFoundationFoundationName("ford")
+    input("Press Enter to search by funder designation...")
+    setFoundationFunderDesignationOne("Charitable Organizations")
     # input("Press Enter to search by funder designation...")
-    # setFoundationFunderDesignation("Private Foundations")
-    input("Press Enter to sort by...")
-    setFoundationSortBy("City")
+    # setFoundationFunderDesignationThree("Charitable Organizations", "Public Foundations", "Private Foundations")
+    # input("Press Enter to sort by...")
+    # setFoundationSortBy("City")
+    # input("Press Enter to search by giving interests...")
+    # setFoundationGivingInterests("Environment")
 
     input("Press Enter to search...")
     search()
