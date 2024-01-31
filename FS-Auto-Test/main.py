@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 
 fs_username = ""                 # change this to valid username (string)
 fs_password = ""                 # change this to valid password (string)
@@ -84,6 +85,12 @@ def setFoundationFunderDesignationThree(designation1, designation2, designation3
     designationSelector.select_by_visible_text(designation3)
 
 
+# Sets 'category' and 'giving interests' search criteria for Foundation Search's 'giving interests'
+def setFoundationGivingInterests(category):
+    categorySelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_ddlCategory"))
+    categorySelector.select_by_visible_text(category)
+
+
 # Sets 'sort by' search criteria for Foundation Search
 def setFoundationSortBy(property):
     sortSelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_ddlViewBy"))
@@ -92,6 +99,7 @@ def setFoundationSortBy(property):
 
 # Searches
 def search():
+    driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
 
 
@@ -133,16 +141,16 @@ if __name__ == "__main__":
 
     # input("Press Enter to search by foundation name...")
     # setFoundationFoundationName("ford")
-    input("Press Enter to search by funder designation...")
-    setFoundationFunderDesignationOne("Charitable Organizations")
+    # input("Press Enter to search by funder designation...")
+    # setFoundationFunderDesignationOne("Charitable Organizations")
     # input("Press Enter to search by funder designation...")
     # setFoundationFunderDesignationTwo("Public Foundations", "Community Foundations")
     # input("Press Enter to search by funder designation...")
     # setFoundationFunderDesignationThree("Charitable Organizations", "Public Foundations", "Private Foundations")
     # input("Press Enter to sort by...")
     # setFoundationSortBy("City")
-    # input("Press Enter to search by giving interests...")
-    # setFoundationGivingInterests("Environment")
+    input("Press Enter to search by giving interests...")
+    setFoundationGivingInterests("Environment")
 
     input("Press Enter to search...")
     search()
