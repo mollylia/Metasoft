@@ -1,6 +1,5 @@
 import unittest
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
 import main
 
@@ -21,7 +20,7 @@ class ProfileKeywordSearch(unittest.TestCase):
         main.navigateProfileKeywordSearch()
         main.setProfileKeyword("gates")
         main.search()
-        self.assertEqual(main.keywordSearchNumResults(), 3)
+        self.assertEqual("3", main.profileSearchNumResults())
 
 
     def test_foundation_search_ford(self):
@@ -31,7 +30,29 @@ class ProfileKeywordSearch(unittest.TestCase):
         main.navigateProfileKeywordSearch()
         main.setProfileFoundationName("ford")
         main.search()
-        self.assertEqual(main.keywordSearchNumResults(), 1)
+        self.assertEqual("1", main.profileSearchNumResults())
+
+
+    def test_foundation_search_foundation(self):
+        driver = self.driver
+        main.fsOpen()
+        main.fsLogin(fs_username, fs_password)
+        main.navigateProfileKeywordSearch()
+        main.setProfileFoundationName("foundation")
+        main.search()
+        self.assertEqual("6,920", main.profileSearchNumResults())
+
+
+    def test_keyword_and_foundation(self):
+        driver = self.driver
+        main.fsOpen()
+        main.fsLogin(fs_username, fs_password)
+        main.navigateProfileKeywordSearch()
+        main.setProfileFoundationName("foundation")
+        main.setProfileKeyword("law")
+        main.search()
+        self.assertEqual("30", main.profileSearchNumResults())
+
 
 if __name__ == '__main__':
     unittest.main()
