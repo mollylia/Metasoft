@@ -85,10 +85,16 @@ def setFoundationFunderDesignationThree(designation1, designation2, designation3
     designationSelector.select_by_visible_text(designation3)
 
 
-# Sets 'category' and 'giving interests' search criteria for Foundation Search's 'giving interests'
-def setFoundationGivingInterests(category):
+# Sets 'category' search criteria for Foundation Search's 'giving interests'
+def setFoundationGivingCategory(category):
     categorySelector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_ddlCategory"))
     categorySelector.select_by_visible_text(category)
+
+
+# Adds 'giving interests' search criteria for Foundation Search's 'giving interests'
+def addFoundationGivingInterest(interest):
+    givingInterest = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_ddlGivingInterest"))
+    givingInterest.select_by_value(interest)
 
 
 # Sets 'sort by' search criteria for Foundation Search
@@ -150,7 +156,12 @@ if __name__ == "__main__":
     # input("Press Enter to sort by...")
     # setFoundationSortBy("City")
     input("Press Enter to search by giving interests...")
-    setFoundationGivingInterests("Environment")
+    setFoundationGivingCategory("Environment")
+
+    input("Press Enter to add a giving interest...")
+    addFoundationGivingInterest("Aquarium")
+    input("Press Enter to add a giving interest...")
+    addFoundationGivingInterest("Biodiversity")
 
     input("Press Enter to search...")
     search()
