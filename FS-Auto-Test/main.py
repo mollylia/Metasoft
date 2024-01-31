@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
@@ -47,6 +46,12 @@ def setProfileFoundationName(foundationName):
     foundationInput.send_keys(foundationName)
 
 
+# Returns the number of results found from Foundation Profile Keyword Search visualizer
+def profileSearchNumResults():
+    summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
+    return summary[19:]
+
+
 # Finds and goes to 'Foundation Search' tab
 def navigateFoundationSearch():
     print("Navigating Foundation Search page")
@@ -92,9 +97,18 @@ def setFoundationGivingCategory(category):
 
 
 # Adds 'giving interests' search criteria for Foundation Search's 'giving interests'
+# REQUIRES: the appropriate giving interest 'category' to already be selected
 def addFoundationGivingInterest(interest):
     givingInterest = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_ddlGivingInterest"))
     givingInterest.select_by_value(interest)
+
+
+# Enters given criteria for 'giving interests' search criteria for Foundation Search
+# REQUIRES: keywords are entered with double quotation marks (e.g., "School")
+#           multiple keywords are separated with AND or OR (e.g., "School" OR "House")
+def enterFoundationGivingInterest(criteria):
+    givingInterest = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_txtGIKeywords")
+    givingInterest.send_keys(criteria)
 
 
 # Sets 'sort by' search criteria for Foundation Search
@@ -103,68 +117,20 @@ def setFoundationSortBy(property):
     sortSelector.select_by_visible_text(property)
 
 
+# Returns the number of results found from Foundation Search visualizer
+def foundationSearchNumResults():
+    summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
+    return summary
+
+
 # Searches
 def search():
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
 
 
-# Returns the number of results found from Foundation Profile Keyword Search
-def keywordSearchNumResults():
-    summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
-    return int(summary[19:])
-
 
 if __name__ == "__main__":
-    ## ---------- Foundation Profile Keyword Search ----------
-    # fsOpen()
-    #
-    # input("Press Enter to go to login...")
-    # fsLogin(fs_username, fs_password)
-    #
-    # input("Press Enter to go to the Profile Keyword Search page...")
-    # navigateProfileKeywordSearch()
-    #
-    # # input("Press Enter to search by keyword...")
-    # # setProfileKeyword("gates")
-    # input("Press Enter to search by foundation name...")
-    # setProfileFoundationName("ford")
-    #
-    # input("Press Enter to search...")
-    # search()
-    #
-    # input("Press Enter to close the browser...")
-    # driver.quit()
-
-    ## ---------- Foundation Search ----------
     fsOpen()
-
-    input("Press Enter to go to login...")
-    fsLogin(fs_username, fs_password)
-
-    input("Press Enter to go to the Foundation Search page...")
-    navigateFoundationSearch()
-
-    # input("Press Enter to search by foundation name...")
-    # setFoundationFoundationName("ford")
-    # input("Press Enter to search by funder designation...")
-    # setFoundationFunderDesignationOne("Charitable Organizations")
-    # input("Press Enter to search by funder designation...")
-    # setFoundationFunderDesignationTwo("Public Foundations", "Community Foundations")
-    # input("Press Enter to search by funder designation...")
-    # setFoundationFunderDesignationThree("Charitable Organizations", "Public Foundations", "Private Foundations")
-    # input("Press Enter to sort by...")
-    # setFoundationSortBy("City")
-    input("Press Enter to search by giving interests...")
-    setFoundationGivingCategory("Environment")
-
-    input("Press Enter to add a giving interest...")
-    addFoundationGivingInterest("Aquarium")
-    input("Press Enter to add a giving interest...")
-    addFoundationGivingInterest("Biodiversity")
-
-    input("Press Enter to search...")
-    search()
-
     input("Press Enter to close the browser...")
     driver.quit()
