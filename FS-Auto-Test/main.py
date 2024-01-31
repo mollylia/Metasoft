@@ -46,7 +46,7 @@ def setProfileFoundationName(foundationName):
     foundationInput.send_keys(foundationName)
 
 
-# Returns the number of results found from Foundation Profile Keyword Search visualizer
+# Returns the number of documents found from Foundation Profile Keyword Search visualizer
 def profileSearchNumResults():
     summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
     return summary[19:]
@@ -117,7 +117,7 @@ def setFoundationSortBy(property):
     sortSelector.select_by_visible_text(property)
 
 
-# Returns the number of results found from Foundation Search visualizer
+# Returns the number of foundations found from Foundation Search visualizer
 def foundationSearchNumResults():
     summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
     return summary
