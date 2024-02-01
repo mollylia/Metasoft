@@ -1,6 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 fs_username = ""                 # change this to valid username (string)
 fs_password = ""                 # change this to valid password (string)
@@ -23,8 +25,8 @@ def fsLogin(username, password):
     usernameInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtUsername")
     passwordInput = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtPassword")
 
-    usernameInput.send_keys(fs_username)
-    passwordInput.send_keys(fs_password)
+    usernameInput.send_keys(username)
+    passwordInput.send_keys(password)
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_btnLogin").click()
 
 
@@ -48,8 +50,17 @@ def setProfileFoundationName(foundationName):
 
 # Returns the number of documents found from Foundation Profile Keyword Search visualizer
 def profileSearchNumResults():
-    summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
-    return summary[19:]
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
+        summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
+        return summary[19:]
+    except Exception as e:
+        print(f"An errror has occured: {e}")
+        print("Refreshing page...")
+        driver.refresh()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
+        summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
+        return summary[19:]
 
 
 # Finds and goes to 'Foundation Search' tab
@@ -119,8 +130,17 @@ def setFoundationSortBy(property):
 
 # Returns the number of foundations found from Foundation Search visualizer
 def foundationSearchNumResults():
-    summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
-    return summary
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber")))
+        summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
+        return summary
+    except Exception as e:
+        print(f"An errror has occured: {e}")
+        print("Refreshing page...")
+        driver.refresh()
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber")))
+        summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
+        return summary
 
 
 # Searches
