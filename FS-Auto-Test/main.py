@@ -172,8 +172,17 @@ def prospectsProjectDefinition(name, funding, province, interest):
 # Searches for My Prospects
 def searchProspects():
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
-    # button = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_btnSearch")
-    # button.click()
+    driver.find_element(By.CLASS_NAME, "flex-item7").click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "fsModalPopupBd")))
+    driver.find_element(By.CLASS_NAME, "fsModalPopupBd").click()
+
+
+# Opens the narrative page of a prospect from the results of searchProspects()
+def prospectsOpenNarrativePage(prospect):
+    targetProspect = driver.find_element(By.LINK_TEXT, prospect)
+    parentElement = targetProspect.find_element(By.XPATH, "..").find_element(By.XPATH, "..")
+    scoreElement = parentElement.find_element(By.XPATH, "following-sibling::*[2]")
+    scoreElement.find_element(By.TAG_NAME, "span").click()
 
 
 if __name__ == "__main__":
