@@ -30,7 +30,7 @@ def fsLogin(username, password):
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_btnLogin").click()
 
 
-# Finds and goes to 'Foundation Profile Keyword Search' tab
+# Finds and goes to 'Foundation Profile Keyword Search' page
 def navigateProfileKeywordSearch():
     print("Navigating Profile Keyword Search page")
     driver.find_element(By.LINK_TEXT, "Foundation Profile Keyword Search").click()
@@ -63,7 +63,7 @@ def profileSearchNumResults():
         return summary[19:]
 
 
-# Finds and goes to 'Foundation Search' tab
+# Finds and goes to 'Foundation Search' page
 def navigateFoundationSearch():
     print("Navigating Foundation Search page")
     driver.find_element(By.LINK_TEXT, "Foundation Search").click()
@@ -143,11 +143,37 @@ def foundationSearchNumResults():
         return summary
 
 
-# Searches
+# Searches for Foundation Profile Keyword Search and Foundation Search pages
 def search():
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
 
+
+# Finds and goes to 'My Best Prospects' page
+def navigateMyBestProspects():
+    print("Navigating My Best Prospects page")
+    driver.find_element(By.LINK_TEXT, "My Best Prospects").click()
+
+
+# Creates a new project definition for My Best Prospects
+# REQUIRES: 250 <= funding <= 2147483648
+def prospectsProjectDefinition(name, funding, province, interest):
+    projectName = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtProjectName")
+    projectFunding = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtGrantAmount")
+    benefitedProvince = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsState_ddlState"))
+    givingInterest = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_fsTextAutoComplete_txtGIAutocomplete")
+
+    projectName.send_keys(name)
+    projectFunding.send_keys(funding)
+    benefitedProvince.select_by_visible_text(province)
+    givingInterest.send_keys(interest)
+
+
+# Searches for My Prospects
+def searchProspects():
+    driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
+    # button = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_btnSearch")
+    # button.click()
 
 
 if __name__ == "__main__":
