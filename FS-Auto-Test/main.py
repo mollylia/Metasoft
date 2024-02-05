@@ -185,6 +185,27 @@ def prospectsOpenNarrativePage(prospect):
     scoreElement.find_element(By.TAG_NAME, "span").click()
 
 
+# Finds giving interest number on narrative page
+def prospectFindInterestNumber(prospect):
+    # finds and opens narrative page for prospect
+    mainWindowHandler = driver.current_window_handle
+    targetProspect = driver.find_element(By.LINK_TEXT, prospect)
+    parentElement = targetProspect.find_element(By.XPATH, "..").find_element(By.XPATH, "..")
+    scoreElement = parentElement.find_element(By.XPATH, "following-sibling::*[2]")
+    scoreElement.find_element(By.TAG_NAME, "span").click()
+    WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
+
+    # loop until new window handle is found
+    for window_handle in driver.window_handles:
+        if mainWindowHandler != window_handle:
+            driver.switch_to.window(window_handle)
+            break
+
+    # locates giving and return giving interest score
+    givingInterests = driver.find_element(By.XPATH, "//div[b[text()='Giving Interests']]")
+    return givingInterests.text.splitlines()[1][7:]
+
+
 if __name__ == "__main__":
     fsOpen()
     input("Press Enter to close the browser...")
