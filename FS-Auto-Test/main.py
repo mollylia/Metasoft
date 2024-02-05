@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -167,6 +168,22 @@ def prospectsProjectDefinition(name, funding, province, interest):
     projectFunding.send_keys(funding)
     benefitedProvince.select_by_visible_text(province)
     givingInterest.send_keys(interest)
+
+
+# Adds new province to project definition for My Best Prospects
+# REQUIRES: a valid prospect definition created with prospectsProjectDefinition
+def addProspectsProvince(province):
+    benefitedProvince = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsState_ddlState"))
+    benefitedProvince.select_by_visible_text(province)
+
+
+# Adds new giving interest to project definition for My Best Prospects
+# REQUIRES: a valid prospect definition created with prospectsProjectDefinition
+def addProspectsInterest(interest):
+    givingInterest = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGivingInterest_fsTextAutoComplete_txtGIAutocomplete")
+    givingInterest.clear()
+    givingInterest.send_keys(interest)
+    givingInterest.send_keys(Keys.TAB)
 
 
 # Searches for My Prospects
