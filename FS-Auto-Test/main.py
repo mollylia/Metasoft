@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -157,7 +159,7 @@ def navigateMyBestProspects():
 
 
 # Creates a new project definition for My Best Prospects
-# REQUIRES: 250 <= funding <= 2147483648
+# REQUIRES: 250 <= funding <= 2147483647
 def prospectsProjectDefinition(name, funding, province, interest):
     projectName = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtProjectName")
     projectFunding = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtGrantAmount")
@@ -168,6 +170,7 @@ def prospectsProjectDefinition(name, funding, province, interest):
     projectFunding.send_keys(funding)
     benefitedProvince.select_by_visible_text(province)
     givingInterest.send_keys(interest)
+    time.sleep(1.5)
 
 
 # Adds new province to project definition for My Best Prospects
@@ -175,6 +178,7 @@ def prospectsProjectDefinition(name, funding, province, interest):
 def addProspectsProvince(province):
     benefitedProvince = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsState_ddlState"))
     benefitedProvince.select_by_visible_text(province)
+    time.sleep(1.5)
 
 
 # Adds new giving interest to project definition for My Best Prospects
@@ -184,6 +188,7 @@ def addProspectsInterest(interest):
     givingInterest.clear()
     givingInterest.send_keys(interest)
     givingInterest.send_keys(Keys.TAB)
+    time.sleep(1.5)
 
 
 # Searches for My Prospects
@@ -220,7 +225,12 @@ def prospectFindInterestNumber(prospect):
 
     # locates giving and return giving interest score
     givingInterests = driver.find_element(By.XPATH, "//div[b[text()='Giving Interests']]")
-    return givingInterests.text.splitlines()[1][7:]
+    interestScore = givingInterests.text.splitlines()[1][7:]
+
+    driver.close()
+    driver.switch_to.window(mainWindowHandler)
+
+    return interestScore
 
 
 if __name__ == "__main__":

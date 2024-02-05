@@ -22,7 +22,6 @@ class ProfileKeywordSearch(unittest.TestCase):
         main.search()
         self.assertEqual("3", main.profileSearchNumResults())
 
-
     def test_foundation_search_ford(self):
         driver = self.driver
         main.fsOpen()
@@ -32,7 +31,6 @@ class ProfileKeywordSearch(unittest.TestCase):
         main.search()
         self.assertEqual("1", main.profileSearchNumResults())
 
-
     def test_foundation_search_foundation(self):
         driver = self.driver
         main.fsOpen()
@@ -41,7 +39,6 @@ class ProfileKeywordSearch(unittest.TestCase):
         main.setProfileFoundationName("foundation")
         main.search()
         self.assertEqual("6,920", main.profileSearchNumResults())
-
 
     def test_keyword_and_foundation(self):
         driver = self.driver

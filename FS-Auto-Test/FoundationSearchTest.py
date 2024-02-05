@@ -22,7 +22,6 @@ class FoundationSearch(unittest.TestCase):
         main.search()
         self.assertEqual("1", main.foundationSearchNumResults())
 
-
     def test_designation_private_sort_asset(self):
         driver = self.driver
         main.fsOpen()
@@ -33,7 +32,6 @@ class FoundationSearch(unittest.TestCase):
         main.search()
         self.assertEqual("6,661", main.foundationSearchNumResults())
 
-
     def test_giving_interest_school(self):
         driver = self.driver
         main.fsOpen()
@@ -42,7 +40,6 @@ class FoundationSearch(unittest.TestCase):
         main.enterFoundationGivingInterest("School")
         main.search()
         self.assertEqual("2,860", main.foundationSearchNumResults())
-
 
     def test_giving_interest_school_OR_house(self):
         driver = self.driver
@@ -53,7 +50,6 @@ class FoundationSearch(unittest.TestCase):
         main.search()
         self.assertEqual("2,860", main.foundationSearchNumResults())
 
-
     def test_giving_interest_school_OR_athletes(self):
         driver = self.driver
         main.fsOpen()
@@ -63,7 +59,6 @@ class FoundationSearch(unittest.TestCase):
         main.search()
         self.assertEqual("2,879", main.foundationSearchNumResults())
 
-
     def test_giving_interest_school_AND_athletes(self):
         driver = self.driver
         main.fsOpen()
@@ -72,7 +67,6 @@ class FoundationSearch(unittest.TestCase):
         main.enterFoundationGivingInterest("\"School\" AND \"Athletes\"")
         main.search()
         self.assertEqual("77", main.foundationSearchNumResults())
-
 
     def test_multiple_criteria(self):
         driver = self.driver
