@@ -1,4 +1,5 @@
 import time
+import sys
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -231,6 +232,142 @@ def prospectFindInterestNumber(prospect):
     driver.switch_to.window(mainWindowHandler)
 
     return interestScore
+
+
+# Finds and goes to 'Power Search' page
+def navigatePowerSearch():
+    print("Navigating Power Search page")
+    driver.find_element(By.LINK_TEXT, "POWER SEARCH").click()
+
+
+# Sets 'search request' search criteria for Power Search
+def setSearchRequest(keyword):
+    searchRequest = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_txtRequest")
+    searchRequest.send_keys(keyword)
+
+
+# Selects all Candian databases
+def selectAllCanadianDatabases():
+    print("Selecting Canadian databases")
+    driver.find_element(By.LINK_TEXT, "Canada:").click()
+
+
+# Selects all American databases
+def selectAllAmericanDatabases():
+    print("Selecting American databases")
+    driver.find_element(By.LINK_TEXT, "US:").click()
+
+
+# Selects all UK databases
+def selectAllUKDatabases():
+    print("Selecting UK databases")
+    driver.find_element(By.LINK_TEXT, "The UK:").click()
+
+
+# Selects all Australian databases
+def selectAllAustralianDatabases():
+    print("Selecting Australian databases")
+    driver.find_element(By.LINK_TEXT, "Australia:").click()
+
+
+# Selects specified Canadian database
+def selectCanDatabase(database):
+    id = ""
+
+    if (database == "Foundation Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCFPKS"
+    elif (database == "Foundation Grants"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCGrants"
+    elif (database == "Foundation Director Biographies"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCFoundationBio"
+    elif (database == "News"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCNews"
+    elif (database == "Corporation Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCCorp"
+    elif (database == "Corporate Director Biographies"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCCorpBio"
+    elif (database == "Government Programs"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCGov"
+    else:
+        sys.exit("Please select a valid Canadian database")
+
+    driver.find_element(By.ID, id).click()
+
+
+# Selects specified American database
+def selectUsaDatabase(database):
+    id = ""
+
+    if (database == "Foundation Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkFPKS"
+    elif (database == "Foundation Grants"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkGrants"
+    elif (database == "Foundation Director Biographies"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkFoundationBio"
+    elif (database == "Charity Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkCharityProfiles"
+    elif (database == "News"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkNews"
+    elif (database == "Charity News"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkCharityNews"
+    elif (database == "990PFs"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chk990PF"
+    elif (database == "Corporation Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkCorp"
+    elif (database == "Corporate Director Biographies"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkCorpBio"
+    elif (database == "Government Programs"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkGov"
+    else:
+        sys.exit("Please select a valid American database")
+
+    driver.find_element(By.ID, id).click()
+
+
+# Selects specified UK database
+def selectUkDatabase(database):
+    id = ""
+
+    if (database == "Foundation Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_chkUFPKS"
+    elif (database == "News"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_chkUNews"
+    else:
+        sys.exit("Please select a valid UK database")
+
+    driver.find_element(By.ID, id).click()
+
+
+# Selects specified Australian database
+def selectAusDatabase(database):
+    id = ""
+
+    if (database == "Foundation Profiles"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_chkAUFPKS"
+    elif (database == "News"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_chkAUNews"
+    else:
+        sys.exit("Please select a valid Australian database")
+
+    driver.find_element(By.ID, id).click()
+
+
+# Selects search features
+def selectSearchFeatures(feature):
+    id = ""
+
+    if (feature == "Fuzzy search"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_SearchType_chkFuzzy"
+    elif (feature == "Stemming"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_SearchType_chkStemming"
+    elif (feature == "Stemming"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_SearchType_chkPhonic"
+    elif (feature == "Stemming"):
+        id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_SearchType_chkSynonyms"
+    else:
+        sys.exit("Please select a valid search feature")
+
+    driver.find_element(By.ID, id).click()
 
 
 if __name__ == "__main__":
