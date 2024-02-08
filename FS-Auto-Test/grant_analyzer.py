@@ -51,15 +51,13 @@ def add_size(size):
 
 
 # Sets 'granting foundation' with words search criteria
-# TODO: Use connectors AND and OR to perform Boolean searches. Use parentheses to specify the order of processing
-def set_foundation_with(keyword):
+def set_foundation_name_with(keyword):
     foundation_name = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_txtGFoundation")
     foundation_name.send_keys(keyword)
 
 
 # Sets 'granting foundation' without words search criteria
-# TODO: Use connectors AND and OR to perform Boolean searches. Use parentheses to specify the order of processing
-def set_foundation_without(keyword):
+def set_foundation_name_without(keyword):
     foundation_name = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_txtGFoundationNot")
     foundation_name.send_keys(keyword)
 
@@ -100,10 +98,9 @@ def add_granting_province(province):
 
 
 # Sets "granting city' search criteria
-# TODO: Use connectors AND and OR to perform Boolean searches. Use parentheses to specify the order of processing
 def set_granting_city(located, city):
     location_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_ddlGCitySwitch"))
-    granting_city = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_lstStateFromCA")
+    granting_city = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_txtGCity")
 
     location_selector.select_by_visible_text(located)
     granting_city.send_keys(city)
@@ -231,7 +228,6 @@ def get_number_results():
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants").text
-        print(summary)
         return summary
     except Exception as e:
         print(f"An error has occurred: {e}")
@@ -239,5 +235,4 @@ def get_number_results():
         driver.refresh()
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants").text
-        print(summary)
-        return summary[19:]
+        return summary
