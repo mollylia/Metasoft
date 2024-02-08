@@ -141,15 +141,13 @@ def search():
 # Returns the number of documents found from Power Search visualizer
 def get_number_results():
     try:
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-            (By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
         return summary[19:]
     except Exception as e:
         print(f"An error has occurred: {e}")
         print("Refreshing page...")
         driver.refresh()
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located(
-            (By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
         return summary[19:]
