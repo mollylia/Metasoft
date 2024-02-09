@@ -141,7 +141,6 @@ def add_recipient_province(province):
 
 
 # Sets 'recipient city' search criteria
-# TODO: Use connectors AND and OR to perform Boolean searches. Use parentheses to specify the order of processing
 def set_recipient_city(located, city):
     location_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_ddlRCitySwitch"))
     recipient_city = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_txtRCity")
@@ -212,7 +211,7 @@ def search():
 
 
 # Clicks the reset button
-def rs_reset():
+def fs_reset():
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder2_btnReset").click()
 
