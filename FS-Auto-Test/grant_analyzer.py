@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# Finds and goes to 'Grant Analyzer' page
+# Finds and goes to 'Grant Analyzer' page from user dashboard
 def navigate():
     print("Navigating Grant Analyzer page")
     driver.find_element(By.LINK_TEXT, "Grant Analyzer").click()
@@ -97,7 +97,7 @@ def add_granting_province(province):
     province_selector.select_by_visible_text(province)
 
 
-# Sets "granting city' search criteria
+# Sets 'granting city' search criteria
 def set_granting_city(located, city):
     location_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_ddlGCitySwitch"))
     granting_city = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder1_txtGCity")
@@ -212,7 +212,7 @@ def search():
 
 
 # Clicks the reset button
-def reset():
+def rs_reset():
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder2_btnReset").click()
 

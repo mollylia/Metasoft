@@ -10,7 +10,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 
 
-# Finds and goes to 'My Best Prospects' page
+# Finds and goes to 'My Best Prospects' page from user dashboard
 def navigate():
     print("Navigating My Best Prospects page")
     driver.find_element(By.LINK_TEXT, "My Best Prospects").click()

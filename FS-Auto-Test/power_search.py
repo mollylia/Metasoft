@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# Finds and goes to 'Power Search' page
+# Finds and goes to 'Power Search' page from user dashboard
 def navigate():
     print("Navigating Power Search page")
     driver.find_element(By.LINK_TEXT, "POWER SEARCH").click()
