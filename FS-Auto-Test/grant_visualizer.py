@@ -40,50 +40,70 @@ def view_mode(mode):
     view_selector.select_by_visible_text(mode)
 
 
-# Sets display field for map view (second dropdown menu)
-# REQUIRES: map view to be selected
-def map_set_display_field(display):
+# Sets dependent variable for map view (second dropdown menu) and chart view (third dropdown menu)
+# REQUIRES: map view or chart view to be selected
+def mode_set_dependent_variable(display):
     try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
         display_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField"))
         display_selector.select_by_visible_text(display)
     except NoSuchElementException:
-        print("Grant Visualizer: map_set_display_field is only available for MAP view")
+        print("Grant Visualizer: mode_set_dependent_variable is not available for this view mode")
 
 
 # Sets grant direction for map view (third dropdown menu)
 # REQUIRES: map view to be selected
 def map_set_grant_direction(direction):
     try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
         direction_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlMapGrantsDirection"))
         direction_selector.select_by_visible_text(direction)
     except NoSuchElementException:
-        print("Grant Visualizer: map_set_grant_direction is only available for MAP view")
+        print("Grant Visualizer: map_set_grant_direction is not available for this view mode")
 
 
 # Sets independent variable for chart view (second dropdown menu)
 # REQUIRES: chart view to be selected
 def chart_set_independent_variable(variable):
     try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
         variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartFacet"))
         variable_selector.select_by_visible_text(variable)
     except NoSuchElementException:
-        print("Grant Visualizer: chart_set_independent_variable is only available for CHART view")
-
-
-# Sets dependent variable for chart view (third dropdown menu)
-# REQUIRES: chart view to be selected
-def chart_set_dependent_variable(variable):
-    variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField"))
-    variable_selector.select_by_visible_text(variable)
+        print("Grant Visualizer: chart_set_independent_variable is not available for this view mode")
 
 
 # Sets chart type for chart view (fourth dropdown menu)
-def chart_type(type):
+# REQUIRES: chart view to be selected
+def chart_type(chart):
     try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
         type_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartType_SingleSeries"))
-        type_selector.select_by_visible_text(type)
+        type_selector.select_by_visible_text(chart)
     except NoSuchElementException:
-        print("Grant Visualizer: chart_type is only available for CHART view")
+        print("Grant Visualizer: chart_type is not available for this view mode")
+
+
+# Sets group by for summary view (second dropdown menu)
+# REQUIRES: summary view to be selected
+def summary_group_by(grouping):
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
+        grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlSummaryFacet"))
+        grouping_selector.select_by_visible_text(grouping)
+    except NoSuchElementException:
+        print("Grant Visualizer: summary_group_by is not available for this view mode")
+
+
+# Sets group by for list view (second dropdown menu)
+# REQUIRES: list view to be selected
+def list_group_by(grouping):
+    try:
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
+        grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlGrantListBy"))
+        grouping_selector.select_by_visible_text(grouping)
+    except NoSuchElementException:
+        print("Grant Visualizer: list_group_by is not available for this view mode")
 
 
 # Sets initial 'from province' search criteria at the bottom of page
