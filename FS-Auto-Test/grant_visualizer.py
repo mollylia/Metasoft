@@ -35,6 +35,7 @@ def save_to_my_searches(search_name):
     # set name for saved search
     if search_name != "":
         name_input = driver.find_element(By.ID, "txtSearchName")
+        name_input.clear()
         name_input.send_keys(search_name)
 
     driver.find_element(By.XPATH, "//span[text()='Save to My Searches']").click()
