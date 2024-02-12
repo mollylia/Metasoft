@@ -19,10 +19,26 @@ def modify_search():
 
 
 # Clicks the modify search button
-def save_to_my_searches():
-    print("Clicking the save to my searches button")
+# Leave search_name blank to use default name
+def save_to_my_searches(search_name):
+    main_window_handler = driver.current_window_handle
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.XPATH, "//span[text()='Save to My Searches']").click()
+    WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
+
+    # loop until new window handle is found
+    for window_handle in driver.window_handles:
+        if main_window_handler != window_handle:
+            driver.switch_to.window(window_handle)
+            break
+
+    # set name for saved search
+    if search_name != "":
+        name_input = driver.find_element(By.ID, "txtSearchName")
+        name_input.send_keys(search_name)
+
+    driver.find_element(By.XPATH, "//span[text()='Save to My Searches']").click()
+    driver.switch_to.window(main_window_handler)
 
 
 # Clicks the help button
