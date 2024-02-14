@@ -3,8 +3,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException
 
+import time
 
 # Finds and goes to 'Grant Analyzer' page from user dashboard
 def navigate():
@@ -54,13 +55,7 @@ def view_mode(mode):
     print("  setting view mode")
     view_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayMode"))
     view_selector.select_by_visible_text(mode)
-
-    try:
-        print("  waiting for element to be clickable")
-        WebDriverWait(driver, 120).until(EC.element_to_be_clickable((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_btnUpdateSearch")))
-    except StaleElementReferenceException:
-        print("  StaleElementReferenceException")
-        WebDriverWait(driver, 120).until(EC.element_to_be_clickable((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_btnUpdateSearch")))
+    driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})         # stop page from auto-reload
 
 
 # Sets dependent variable for map view (second dropdown menu) and chart view (third dropdown menu)
@@ -111,6 +106,7 @@ def chart_type(chart):
 # REQUIRES: summary view to be selected
 def summary_group_by(grouping):
     try:
+        print("  summary: changing group by")
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField")))
         grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlSummaryFacet"))
         grouping_selector.select_by_visible_text(grouping)
@@ -157,7 +153,6 @@ def add_to_province(province):
 
 # Sets initial 'granting year' search criteria at the bottom of page
 def set_year(year):
-    WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstYear")))
     year_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstYear"))
     year_selector.deselect_all()                                         # deselects the initial 'all years' option
     year_selector.select_by_visible_text(year)
