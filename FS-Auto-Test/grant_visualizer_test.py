@@ -25,21 +25,21 @@ class GrantVisualizerTest(unittest.TestCase):
         grant_visualizer.search()
         self.assertEqual("2,283", grant_visualizer.get_number_results())
 
-    # def test_summary(self):
-    #     grant_visualizer.view_mode("Summary")
-    #     self.assertEqual("2,225,796", grant_visualizer.get_number_results())
-    #
-    # def test_chart(self):
-    #     grant_visualizer.view_mode("Chart")
-    #     self.assertEqual("2,225,796", grant_visualizer.get_number_results())
-    #
-    # def test_list(self):
-    #     grant_visualizer.view_mode("List")
-    #     self.assertEqual("2,225,796", grant_visualizer.get_number_results())
-    #
-    # def test_map_selectors(self):
-    #     grant_visualizer.mode_set_dependent_variable("Number of Grants")
-    #     self.assertEqual("2,116,165", grant_visualizer.get_number_results())
+    def test_summary(self):
+        grant_visualizer.view_mode("Summary")
+        self.assertEqual("2,225,796", grant_visualizer.get_number_results())
+
+    def test_chart(self):
+        grant_visualizer.view_mode("Chart")
+        self.assertEqual("2,225,796", grant_visualizer.get_number_results())
+
+    def test_list(self):
+        grant_visualizer.view_mode("List")
+        self.assertEqual("2,225,796", grant_visualizer.get_number_results())
+
+    def test_map_selectors(self):
+        grant_visualizer.mode_set_dependent_variable("Number of Grants")
+        self.assertEqual("2,116,165", grant_visualizer.get_number_results())
 
 
 if __name__ == '__main__':
