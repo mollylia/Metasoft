@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 
 
 # Finds and goes to 'Grant Analyzer' page from user dashboard
@@ -50,17 +50,22 @@ def fs_help():
 
 # Sets the view mode
 def view_mode(mode):
-    print("  setting view mode")
-    view_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayMode"))
-    view_selector.select_by_visible_text(mode)
-    driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})         # stop page from auto-reload
-
+    print("  Setting view mode")
+    try:
+        view_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayMode"))
+        view_selector.select_by_visible_text(mode)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})         # stop page from auto-reload
+    except StaleElementReferenceException:
+        print("  Element not found. Trying again!")
+        view_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayMode"))
+        view_selector.select_by_visible_text(mode)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})         # stop page from auto-reload
 
 # Sets dependent variable for map view (second dropdown menu) and chart view (third dropdown menu)
 # REQUIRES: map view or chart view to be selected
 def mode_set_dependent_variable(display):
     try:
-        print("  map/chart: setting dependent variable")
+        print("  Map/chart: setting dependent variable")
         display_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField"))
         display_selector.select_by_visible_text(display)
     except NoSuchElementException:
@@ -71,7 +76,7 @@ def mode_set_dependent_variable(display):
 # REQUIRES: map view to be selected
 def map_set_grant_direction(direction):
     try:
-        print("  map: setting grant direction")
+        print("  Map: setting grant direction")
         direction_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlMapGrantsDirection"))
         direction_selector.select_by_visible_text(direction)
     except NoSuchElementException:
@@ -82,7 +87,7 @@ def map_set_grant_direction(direction):
 # REQUIRES: chart view to be selected
 def chart_set_independent_variable(variable):
     try:
-        print("  chart: setting independent variable")
+        print("  Chart: setting independent variable")
         variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartFacet"))
         variable_selector.select_by_visible_text(variable)
     except NoSuchElementException:
@@ -93,7 +98,7 @@ def chart_set_independent_variable(variable):
 # REQUIRES: chart view to be selected
 def chart_type(chart):
     try:
-        print("  chart: setting chart type")
+        print("  Chart: setting chart type")
         type_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartType_SingleSeries"))
         type_selector.select_by_visible_text(chart)
     except NoSuchElementException:
@@ -104,7 +109,7 @@ def chart_type(chart):
 # REQUIRES: summary view to be selected
 def summary_group_by(grouping):
     try:
-        print("  summary: setting group by")
+        print("  Summary: setting group by")
         grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlSummaryFacet"))
         grouping_selector.select_by_visible_text(grouping)
     except NoSuchElementException:
@@ -115,7 +120,7 @@ def summary_group_by(grouping):
 # REQUIRES: list view to be selected
 def list_group_by(grouping):
     try:
-        print("  list: setting group by")
+        print("  List: setting group by")
         grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlGrantListBy"))
         grouping_selector.select_by_visible_text(grouping)
     except NoSuchElementException:
@@ -218,6 +223,7 @@ def get_number_results():
     try:
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants").text
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})
         return summary
     except Exception as e:
         print(f"An error has occurred: {e}")
@@ -225,4 +231,5 @@ def get_number_results():
         driver.refresh()
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants").text
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})
         return summary
