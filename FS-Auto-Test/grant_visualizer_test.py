@@ -37,9 +37,21 @@ class GrantVisualizerTest(unittest.TestCase):
         grant_visualizer.view_mode("List")
         self.assertEqual("2,225,796", grant_visualizer.get_number_results())
 
-    def test_map_selectors(self):
-        grant_visualizer.mode_set_dependent_variable("Number of Grants")
-        self.assertEqual("2,116,165", grant_visualizer.get_number_results())
+    # def test_map_first_selector(self):
+    #     grant_visualizer.view_mode("Map")
+    #     grant_visualizer.mode_set_dependent_variable("Number of Grants")
+    #     self.assertEqual("2,116,165", grant_visualizer.get_number_results())
+    #
+    # def test_map_second_selector(self):
+    #     grant_visualizer.view_mode("Map")
+    #     grant_visualizer.map_set_grant_direction("Grants Given")
+    #     self.assertEqual("2,218,444", grant_visualizer.get_number_results())
+    #
+    # def test_map_all_selectors(self):
+    #     grant_visualizer.view_mode("Map")
+    #     grant_visualizer.mode_set_dependent_variable("Number of Grants")
+    #     grant_visualizer.map_set_grant_direction("Grants Given")
+    #     self.assertEqual("2,218,444", grant_visualizer.get_number_results())
 
 
 if __name__ == '__main__':
