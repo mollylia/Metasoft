@@ -61,13 +61,16 @@ def view_mode(mode):
         view_selector.select_by_visible_text(mode)
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})         # stop page from auto-reload
 
+
 # Sets dependent variable for map view (second dropdown menu) and chart view (third dropdown menu)
 # REQUIRES: map view or chart view to be selected
 def mode_set_dependent_variable(display):
     try:
         print("  Map/chart: setting dependent variable")
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})        # starts script
         display_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField"))
         display_selector.select_by_visible_text(display)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})
     except NoSuchElementException:
         print("Grant Visualizer: mode_set_dependent_variable is not available for this view mode")
 
@@ -77,8 +80,10 @@ def mode_set_dependent_variable(display):
 def map_set_grant_direction(direction):
     try:
         print("  Map: setting grant direction")
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})        # starts script
         direction_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlMapGrantsDirection"))
         direction_selector.select_by_visible_text(direction)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})
     except NoSuchElementException:
         print("Grant Visualizer: map_set_grant_direction is not available for this view mode")
 
@@ -103,6 +108,14 @@ def chart_type(chart):
         type_selector.select_by_visible_text(chart)
     except NoSuchElementException:
         print("Grant Visualizer: chart_type is not available for this view mode")
+
+
+# Sets bubble size value for chart view (fifth dropdown menu)
+# REQUIRES: chart view to be selected
+#           'grant amount / number of grants' selected for dependent variable
+# TODO
+def chart_set_bubble(value):
+    print("not done yet")
 
 
 # Sets group by for summary view (second dropdown menu)
