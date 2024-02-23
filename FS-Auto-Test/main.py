@@ -13,6 +13,7 @@ def fs_open():
 
 # Logs in with given username and password
 def fs_login(username, password):
+    print("  Logging in")
     driver.find_element(By.CLASS_NAME, "header--login").click()
 
     username_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentBody_txtUsername")
