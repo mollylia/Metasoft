@@ -104,24 +104,55 @@ def map_set_grant_direction(direction):
 # REQUIRES: chart view to be selected
 def chart_set_independent_variable(variable):
     print("  Chart: setting independent variable")
-    variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartFacet"))
-    variable_selector.select_by_visible_text(variable)
+
+    try:
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
+        variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartFacet"))
+        variable_selector.select_by_visible_text(variable)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
+    except:
+        print("  Can't find element. Refreshing!")
+        driver.refresh()
+        variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartFacet"))
+        variable_selector.select_by_visible_text(variable)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
 
 
 # Sets chart type for chart view (fourth dropdown menu)
 # REQUIRES: chart view to be selected
 def chart_type(chart):
     print("  Chart: setting chart type")
-    type_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartType_SingleSeries"))
-    type_selector.select_by_visible_text(chart)
+
+    try:
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
+        type_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartType_SingleSeries"))
+        type_selector.select_by_visible_text(chart)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
+    except:
+        print("  Can't find element. Refreshing!")
+        driver.refresh()
+        type_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartType_SingleSeries"))
+        type_selector.select_by_visible_text(chart)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
 
 
 # Sets bubble size value for chart view (fifth dropdown menu)
 # REQUIRES: chart view to be selected
 #           'grant amount / number of grants' selected for dependent variable
-# TODO
 def chart_set_bubble(value):
-    print("not done yet")
+    print("  Chart: setting bubble value")
+
+    try:
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
+        bubble_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlBubbleAxis"))
+        bubble_selector.select_by_visible_text(value)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
+    except:
+        print("  Can't find element. Refreshing!")
+        driver.refresh()
+        bubble_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlBubbleAxis"))
+        bubble_selector.select_by_visible_text(value)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
 
 
 # Sets group by for summary view (second dropdown menu)

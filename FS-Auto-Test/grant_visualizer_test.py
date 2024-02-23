@@ -25,58 +25,58 @@ class GrantVisualizerTest(unittest.TestCase):
     #     grant_visualizer.search()
     #     self.assertEqual("2,271", grant_visualizer.get_number_results())
 
-    def test_map(self):
-        grant_visualizer.view_mode("Map")
-        self.assertEqual("2,172,407", grant_visualizer.get_number_results())
-
-    def test_map_first_selector(self):
-        grant_visualizer.view_mode("Map")
-        grant_visualizer.mode_set_dependent_variable("Number of Grants")
-        self.assertEqual("2,172,407", grant_visualizer.get_number_results())
-
-    def test_map_second_selector(self):
-        grant_visualizer.view_mode("Map")
-        grant_visualizer.map_set_grant_direction("Grants Given")
-        self.assertEqual("2,277,385", grant_visualizer.get_number_results())
-
-    def test_map_all_selectors(self):
-        grant_visualizer.view_mode("Map")
-        grant_visualizer.mode_set_dependent_variable("Number of Grants")
-        grant_visualizer.map_set_grant_direction("Grants Given")
-        self.assertEqual("2,277,385", grant_visualizer.get_number_results())
-
-    # def test_chart(self):
-    #     grant_visualizer.view_mode("Chart")
-    #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+    # def test_map(self):
+    #     grant_visualizer.view_mode("Map")
+    #     self.assertEqual("2,172,407", grant_visualizer.get_number_results())
     #
-    # def test_chart_first_selector(self):
-    #     grant_visualizer.view_mode("Chart")
-    #     grant_visualizer.chart_set_independent_variable("Category")
-    #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
-    #
-    # def test_chart_second_selector(self):
-    #     grant_visualizer.view_mode("Chart")
+    # def test_map_first_selector(self):
+    #     grant_visualizer.view_mode("Map")
     #     grant_visualizer.mode_set_dependent_variable("Number of Grants")
-    #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+    #     self.assertEqual("2,172,407", grant_visualizer.get_number_results())
     #
-    # def test_chart_third_selector(self):
-    #     grant_visualizer.view_mode("Chart")
-    #     grant_visualizer.chart_type("Horizontal Bar (3D)")
-    #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+    # def test_map_second_selector(self):
+    #     grant_visualizer.view_mode("Map")
+    #     grant_visualizer.map_set_grant_direction("Grants Given")
+    #     self.assertEqual("2,277,385", grant_visualizer.get_number_results())
     #
-    # def test_chart_fourth_selector(self):
-    #     grant_visualizer.view_mode("Chart")
-    #     grant_visualizer.mode_set_dependent_variable("Grant Amount / Number of Grants")
-    #     grant_visualizer.chart_set_bubble("Bubble size = Grant Amount")
-    #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
-    #
-    # def test_chart_all_selectors(self):
-    #     grant_visualizer.view_mode("Chart")
-    #     grant_visualizer.chart_set_independent_variable("Category")
+    # def test_map_all_selectors(self):
+    #     grant_visualizer.view_mode("Map")
     #     grant_visualizer.mode_set_dependent_variable("Number of Grants")
-    #     grant_visualizer.chart_type("Horizontal Bar (3D)")
-    #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
-    #
+    #     grant_visualizer.map_set_grant_direction("Grants Given")
+    #     self.assertEqual("2,277,385", grant_visualizer.get_number_results())
+
+    def test_chart(self):
+        grant_visualizer.view_mode("Chart")
+        self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+
+    def test_chart_first_selector(self):
+        grant_visualizer.view_mode("Chart")
+        grant_visualizer.chart_set_independent_variable("Category")
+        self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+
+    def test_chart_second_selector(self):
+        grant_visualizer.view_mode("Chart")
+        grant_visualizer.mode_set_dependent_variable("Number of Grants")
+        self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+
+    def test_chart_third_selector(self):
+        grant_visualizer.view_mode("Chart")
+        grant_visualizer.chart_type("Horizontal Bar (3D)")
+        self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+
+    def test_chart_fourth_selector(self):
+        grant_visualizer.view_mode("Chart")
+        grant_visualizer.mode_set_dependent_variable("Grant Amount / Number of Grants")
+        grant_visualizer.chart_set_bubble("Bubble size = Grant Amount")
+        self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+
+    def test_chart_all_selectors(self):
+        grant_visualizer.view_mode("Chart")
+        grant_visualizer.chart_set_independent_variable("Category")
+        grant_visualizer.mode_set_dependent_variable("Number of Grants")
+        grant_visualizer.chart_type("Horizontal Bar (3D)")
+        self.assertEqual("2,285,071", grant_visualizer.get_number_results())
+
     # def test_summary(self):
     #     grant_visualizer.view_mode("Summary")
     #     self.assertEqual("2,285,071", grant_visualizer.get_number_results())
