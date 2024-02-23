@@ -75,7 +75,7 @@ def mode_set_dependent_variable(display):
         display_selector.select_by_visible_text(display)
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
     except:
-        print("  Can't find element. Refreshing!")
+        print("    Can't find element. Refreshing!")
         driver.refresh()
         display_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlDisplayField"))
         display_selector.select_by_visible_text(display)
@@ -93,7 +93,7 @@ def map_set_grant_direction(direction):
         direction_selector.select_by_visible_text(direction)
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
     except:
-        print("  Can't find element. Refreshing!")
+        print("    Can't find element. Refreshing!")
         driver.refresh()
         direction_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlMapGrantsDirection"))
         direction_selector.select_by_visible_text(direction)
@@ -111,7 +111,7 @@ def chart_set_independent_variable(variable):
         variable_selector.select_by_visible_text(variable)
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
     except:
-        print("  Can't find element. Refreshing!")
+        print("    Can't find element. Refreshing!")
         driver.refresh()
         variable_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartFacet"))
         variable_selector.select_by_visible_text(variable)
@@ -129,7 +129,7 @@ def chart_type(chart):
         type_selector.select_by_visible_text(chart)
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
     except:
-        print("  Can't find element. Refreshing!")
+        print("    Can't find element. Refreshing!")
         driver.refresh()
         type_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlChartType_SingleSeries"))
         type_selector.select_by_visible_text(chart)
@@ -140,15 +140,13 @@ def chart_type(chart):
 # REQUIRES: chart view to be selected
 #           'grant amount / number of grants' selected for dependent variable
 def chart_set_bubble(value):
-    print("  Chart: setting bubble value")
-
     try:
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
         bubble_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlBubbleAxis"))
         bubble_selector.select_by_visible_text(value)
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
     except:
-        print("  Can't find element. Refreshing!")
+        print("    Can't find element. Refreshing!")
         driver.refresh()
         bubble_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlBubbleAxis"))
         bubble_selector.select_by_visible_text(value)
@@ -159,8 +157,18 @@ def chart_set_bubble(value):
 # REQUIRES: summary view to be selected
 def summary_group_by(grouping):
     print("  Summary: setting group by")
-    grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlSummaryFacet"))
-    grouping_selector.select_by_visible_text(grouping)
+
+    try:
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
+        grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlSummaryFacet"))
+        grouping_selector.select_by_visible_text(grouping)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
+    except:
+        print("    Can't find element. Refreshing!")
+        driver.refresh()
+        grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlSummaryFacet"))
+        grouping_selector.select_by_visible_text(grouping)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
 
 
 # Sets group by for list view (second dropdown menu)
