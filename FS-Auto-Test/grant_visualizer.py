@@ -175,8 +175,18 @@ def summary_group_by(grouping):
 # REQUIRES: list view to be selected
 def list_group_by(grouping):
     print("  List: setting group by")
-    grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlGrantListBy"))
-    grouping_selector.select_by_visible_text(grouping)
+
+    try:
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
+        grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlGrantListBy"))
+        grouping_selector.select_by_visible_text(grouping)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
+    except:
+        print("    Can't find element. Refreshing!")
+        driver.refresh()
+        grouping_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlGrantListBy"))
+        grouping_selector.select_by_visible_text(grouping)
+        driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': True})   # stops script
 
 
 # Sets initial 'from province' search criteria at the bottom of page
