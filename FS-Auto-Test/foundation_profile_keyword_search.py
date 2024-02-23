@@ -164,13 +164,7 @@ def save_to_my_searches(search_name):
     driver.switch_to.window(main_window_handler)
 
 
-# Clicks the 'add to my prospect manager' button
-# TODO
-def add_to_prospect_manager():
-    print("  Adding to prospect manager...")
-
-
 # Clicks the 'export to csv' button
-# TODO
 def export_to_csv():
     print("  Exporting to CSV...")
+    driver.find_element(By.XPATH, "//*[@id='ctl00_ctl00_fnContentBody_ContentFindFundersBody_btnExportExcel']/span").click()
