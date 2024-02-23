@@ -10,16 +10,47 @@ def navigate():
     driver.find_element(By.LINK_TEXT, "Foundation Profile Keyword Search").click()
 
 
+# Sets 'foundation name' search criteria
+def set_foundation_name(foundation_name):
+    foundation_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtFName")
+    foundation_input.send_keys(foundation_name)
+
+
+# Sets 'grantor city' search criteria
+def set_grantor_city(city):
+    city_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtCity")
+    city_input.send_keys(city)
+
+
+# Sets 'grantor province' search criteria
+def set_grantor_province(province):
+    province_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtState")
+    province_input.send_keys(province)
+
+
+# Sets 'director/officer' search criteria
+def set_director_officer(name):
+    name_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtOfficers")
+    name_input.send_keys(name)
+
+
 # Sets 'keyword search' search criteria
 def set_keyword(keyword):
     keyword_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtKeywordSearch")
     keyword_input.send_keys(keyword)
 
 
-# Sets 'foundation name' search criteria
-def set_foundation_name(foundation_name):
-    foundation_input = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_txtFName")
-    foundation_input.send_keys(foundation_name)
+# Sets 'type of search' search criteria
+# Enter empty types as ""
+def type_of_search(type_1, type_2, type_3, type_4):
+    if "Fuzzy search" in (type_1, type_2, type_3, type_4):
+        driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_SearchType_chkFuzzy").click()
+    if "Stemming" in (type_1, type_2, type_3, type_4):
+        driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_SearchType_chkStemming").click()
+    if "Phonic search" in (type_1, type_2, type_3, type_4):
+        driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_SearchType_chkPhonic").click()
+    if "Thesaurus" in (type_1, type_2, type_3, type_4):
+        driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsProfileKeyword_SearchType_chkSynonyms").click()
 
 
 # Clicks the search button
