@@ -13,29 +13,29 @@ class FoundationProfileKeywordSearchTest(unittest.TestCase):
         print("\n")
 
     def test_keyword_search_gates(self):
-        result = 4
+        original_result = 4
         foundation_profile_keyword_search.set_keyword("gates")
         foundation_profile_keyword_search.search()
-        self.assertTrue(result*0.8 <= foundation_profile_keyword_search.get_number_results() <= result*1.2, "Result is more than 20% off")
+        self.assertTrue(original_result*0.8 <= foundation_profile_keyword_search.get_number_results() <= original_result*1.2, "Result is more than 20% off")
 
     def test_foundation_search_ford(self):
-        result = 1
+        original_result = 1
         foundation_profile_keyword_search.set_foundation_name("ford")
         foundation_profile_keyword_search.search()
-        self.assertTrue(result*0.8 <= foundation_profile_keyword_search.get_number_results() <= result*1.2, "Result is more than 20% off")
+        self.assertTrue(original_result*0.8 <= foundation_profile_keyword_search.get_number_results() <= original_result*1.2, "Result is more than 20% off")
 
     def test_foundation_search_foundation(self):
-        result = 6955
+        original_result = 6955
         foundation_profile_keyword_search.set_foundation_name("foundation")
         foundation_profile_keyword_search.search()
-        self.assertTrue(result*0.8 <= foundation_profile_keyword_search.get_number_results() <= result*1.2, "Result is more than 20% off")
+        self.assertTrue(original_result*0.8 <= foundation_profile_keyword_search.get_number_results() <= original_result*1.2, "Result is more than 20% off")
 
     def test_keyword_and_foundation(self):
-        result = 29
+        original_result = 29
         foundation_profile_keyword_search.set_foundation_name("foundation")
         foundation_profile_keyword_search.set_keyword("law")
         foundation_profile_keyword_search.search()
-        self.assertTrue(result*0.8 <= foundation_profile_keyword_search.get_number_results() <= result*1.2, "Result is more than 20% off")
+        self.assertTrue(original_result*0.8 <= foundation_profile_keyword_search.get_number_results() <= original_result*1.2, "Result is more than 20% off")
 
 
 if __name__ == '__main__':
