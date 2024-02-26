@@ -14,14 +14,14 @@ def navigate():
 # Sets 'foundation name' with words search criteria
 def set_foundation_name_with(name):
     print("  Setting foundation name (with words)")
-    foundation_name = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtFNameNot")
+    foundation_name = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtFName")
     foundation_name.send_keys(name)
 
 
 # Sets 'foundation name' without words search criteria
 def set_foundation_name_without(name):
     print("  Setting foundation name (without words)")
-    foundation_name = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtFName")
+    foundation_name = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_txtFNameNot")
     foundation_name.send_keys(name)
 
 
@@ -260,11 +260,11 @@ def get_number_results():
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
-        return summary
+        return int(summary.replace(",", ""))
     except Exception as e:
         print(f"An error has occurred: {e}")
         print("Refreshing page...")
         driver.refresh()
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblTotalNumber").text
-        return summary
+        return int(summary.replace(",", ""))
