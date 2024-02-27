@@ -14,36 +14,38 @@ def navigate():
 
 # Sets 'search request' search criteria
 def set_search_request(keyword):
+    print("  Setting search request")
     search_request = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_txtRequest")
     search_request.send_keys(keyword)
 
 
 # Selects all Canadian databases
 def select_all_canadian_databases():
-    print("Selecting Canadian databases")
+    print("  Selecting all Canadian databases")
     driver.find_element(By.LINK_TEXT, "Canada:").click()
 
 
 # Selects all American databases
 def select_all_american_databases():
-    print("Selecting American databases")
+    print("  Selecting all American databases")
     driver.find_element(By.LINK_TEXT, "US:").click()
 
 
 # Selects all UK databases
 def select_all_uk_databases():
-    print("Selecting UK databases")
+    print("  Selecting all UK databases")
     driver.find_element(By.LINK_TEXT, "The UK:").click()
 
 
 # Selects all Australian databases
 def select_all_australian_databases():
-    print("Selecting Australian databases")
+    print("  Selecting all Australian databases")
     driver.find_element(By.LINK_TEXT, "Australia:").click()
 
 
 # Selects specified Canadian database
 def select_canadian_database(database):
+    print("  Selecting a Canadian database")
     if database == "Foundation Profiles":
         input_id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchCA1_chkCFPKS"
     elif database == "Foundation Grants":
@@ -66,6 +68,7 @@ def select_canadian_database(database):
 
 # Selects specified American database
 def select_american_database(database):
+    print("  Selecting an American database")
     if database == "Foundation Profiles":
         input_id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_fsSubGlobalSearchUS1_chkFPKS"
     elif database == "Foundation Grants":
@@ -94,6 +97,7 @@ def select_american_database(database):
 
 # Selects specified UK database
 def select_uk_database(database):
+    print("  Selecting a UK database")
     if database == "Foundation Profiles":
         input_id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_chkUFPKS"
     elif database == "News":
@@ -106,6 +110,7 @@ def select_uk_database(database):
 
 # Selects specified Australian database
 def select_australian_database(database):
+    print("  Selecting an Australian database")
     if database == "Foundation Profiles":
         input_id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_chkAUFPKS"
     elif database == "News":
@@ -117,7 +122,8 @@ def select_australian_database(database):
 
 
 # Selects search features
-def select_search_features(feature):
+def select_search_feature(feature):
+    print("  Selecting a search feature")
     if feature == "Fuzzy search":
         input_id = "ctl00_ctl00_fnContentBody_ContentFindFundersBody_fsGlobal_SearchType_chkFuzzy"
     elif feature == "Stemming":
@@ -134,20 +140,23 @@ def select_search_features(feature):
 
 # Clicks the search button
 def search():
+    print("  Searching...")
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersSubBody_btnSearch").click()
 
 
 # Returns the number of documents found from Power Search visualizer
 def get_number_results():
+    print("  Getting number of results")
+
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
-        return summary[19:]
+        return int(summary[19:].replace(",", ""))
     except Exception as e:
         print(f"An error has occurred: {e}")
         print("Refreshing page...")
         driver.refresh()
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_lblSearchSummary").text
-        return summary[19:]
+        return int(summary[19:].replace(",", ""))
