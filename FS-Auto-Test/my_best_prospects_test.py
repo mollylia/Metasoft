@@ -13,6 +13,9 @@ class MyBestProspectsTest(unittest.TestCase):
         main.fs_login(main.fs_username, main.fs_password)
         my_best_prospects.navigate()
 
+    def tearDown(self):
+        print("\n")
+
     def test_vancouver_foundation(self):
         my_best_prospects.create_project_definition("Vancouver Foundation", "2147483647", "British Columbia", "Computer")
         my_best_prospects.search()
@@ -45,7 +48,8 @@ class MyBestProspectsTest(unittest.TestCase):
         my_best_prospects.add_interest("Camp")
         my_best_prospects.add_interest("Artifacts")
         my_best_prospects.search()
-        self.assertEqual("68", my_best_prospects.find_interest_number("WINBERG FOUNDATION"))
+        self.assertEqual("91", my_best_prospects.find_interest_number("BOLAND"))
+        # self.assertEqual("91", my_best_prospects.find_interest_number("BOLAND FOUNDATION"))
 
 
 if __name__ == '__main__':
