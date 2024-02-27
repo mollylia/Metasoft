@@ -15,13 +15,15 @@ def navigate():
 
 # Clicks the modify search button
 def modify_search():
+    print("  Modifying search...")
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.XPATH, "//span[text()='Modify Search']").click()
 
 
-# Clicks the modify search button
+# Clicks the save to my searches button
 # Leave search_name blank to use default name
 def save_to_my_searches(search_name):
+    print("  Saving to my searches...")
     main_window_handler = driver.current_window_handle
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.XPATH, "//span[text()='Save to My Searches']").click()
@@ -45,6 +47,7 @@ def save_to_my_searches(search_name):
 
 # Clicks the help button
 def fs_help():
+    print("  Visiting help...")
     driver.execute_script("window.scrollTo(0, document.body.scrollTop)")
     driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_fsHelp_lblSmallHelp").click()
 
@@ -140,6 +143,8 @@ def chart_type(chart):
 # REQUIRES: chart view to be selected
 #           'grant amount / number of grants' selected for dependent variable
 def chart_set_bubble(value):
+    print("  Chart: setting buble value")
+
     try:
         driver.execute_cdp_cmd('Emulation.setScriptExecutionDisabled', {'value': False})  # starts script
         bubble_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_ddlBubbleAxis"))
@@ -191,6 +196,7 @@ def list_group_by(grouping):
 
 # Sets initial 'from province' search criteria at the bottom of page
 def set_from_province(province):
+    print("  Setting from province")
     province_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstStateFromCA"))
     province_selector.deselect_all()                                     # deselects the initial 'all provinces' option
     province_selector.select_by_visible_text(province)
@@ -198,12 +204,14 @@ def set_from_province(province):
 
 # Selects additional 'from province' search criteria at the bottom of page
 def add_from_province(province):
+    print("    Adding an additional from province")
     province_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstStateFromCA"))
     province_selector.select_by_visible_text(province)
 
 
 # Sets initial 'to province' search criteria at the bottom of page
 def set_to_province(province):
+    print("  Setting to province")
     province_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstStateToCA"))
     province_selector.deselect_all()                                     # deselects the initial 'all provinces' option
     province_selector.select_by_visible_text(province)
@@ -211,12 +219,14 @@ def set_to_province(province):
 
 # Selects additional 'to province' search criteria at the bottom of page
 def add_to_province(province):
+    print("    Adding an additional province")
     province_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstStateToCA"))
     province_selector.select_by_visible_text(province)
 
 
 # Sets initial 'granting year' search criteria at the bottom of page
 def set_year(year):
+    print("  Setting year")
     year_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstYear"))
     year_selector.deselect_all()                                         # deselects the initial 'all years' option
     year_selector.select_by_visible_text(year)
@@ -224,12 +234,14 @@ def set_year(year):
 
 # Selects additional 'granting year' search criteria at the bottom of page
 def add_year(year):
+    print("    Adding an additional year")
     year_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstYear"))
     year_selector.select_by_visible_text(year)
 
 
 # Sets initial 'granting category' search criteria at the bottom of page
 def set_category(category):
+    print("  Setting category")
     category_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstCategory"))
     category_selector.deselect_all()                                     # deselects the initial 'all categories' option
     category_selector.select_by_visible_text(category)
@@ -237,12 +249,14 @@ def set_category(category):
 
 # Selects additional 'granting category' search criteria at the bottom of page
 def add_category(category):
+    print("    Adding an additional category")
     category_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstCategory"))
     category_selector.select_by_visible_text(category)
 
 
 # Sets initial 'grant size' search criteria at the bottom of page
 def set_size(size):
+    print("  Setting size")
     size_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstRangeCA"))
     size_selector.deselect_all()                                         # deselects the initial 'all grant sizes' option
     size_selector.select_by_visible_text(size)
@@ -250,12 +264,14 @@ def set_size(size):
 
 # Selects additional 'grant size' search criteria at the bottom of page
 def add_size(size):
+    print("    Adding an additional size")
     size_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstRangeCA"))
     size_selector.select_by_visible_text(size)
 
 
 # Sets 'funder designation' search criteria at the bottom of page
 def set_funder_designation(first, second, third):
+    print("  Setting funder designation")
     designation_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lstFunderDesignation"))
 
     if first:
@@ -269,6 +285,7 @@ def set_funder_designation(first, second, third):
 
 # Clicks the search button at the bottom of page
 def search():
+    print("  Searching...")
     element_into_view = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_Panel1")
     driver.execute_script("arguments[0].scrollIntoView();", element_into_view)
     driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_btnSearch").click()
@@ -276,6 +293,7 @@ def search():
 
 # Clicks the reset button at the bottom of page
 def fs_reset():
+    print("  Resetting search criteria...")
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
     driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_btnReset").click()
 
