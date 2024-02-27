@@ -227,11 +227,11 @@ def get_number_results():
     try:
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants").text
-        return summary
+        return int(summary.replace(",", ""))
     except Exception as e:
         print(f"An error has occurred: {e}")
         print("Refreshing page...")
         driver.refresh()
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants")))
         summary = driver.find_element(By.ID, "ctl00_ctl00_TabContentPlaceHolder_FindFundersContentPlaceHolder_lblTotalGrants").text
-        return summary
+        return int(summary.replace(",", ""))
