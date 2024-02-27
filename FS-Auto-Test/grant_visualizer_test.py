@@ -9,6 +9,9 @@ class GrantVisualizerTest(unittest.TestCase):
         main.fs_login(main.fs_username, main.fs_password)
         grant_visualizer.navigate()
 
+    def tearDown(self):
+        print("\n")
+
     def test_no_criteria(self):
         original_result = 2172407
         self.assertTrue(original_result*0.8 <= grant_visualizer.get_number_results() <= original_result*1.2, "Result is more than 20% off")

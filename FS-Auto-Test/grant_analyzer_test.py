@@ -9,6 +9,9 @@ class GrantAnalyzerTest(unittest.TestCase):
         main.fs_login(main.fs_username, main.fs_password)
         grant_analyzer.navigate()
 
+    def tearDown(self):
+        print("\n")
+
     def test_category(self):
         original_result = 503377
         grant_analyzer.set_category("Health")
