@@ -1,3 +1,5 @@
+import time
+
 from web_driver_instance import driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
@@ -165,6 +167,19 @@ def set_selection_options(type, foundations_manager, covid_help):
     type_selector.select_by_visible_text(type)
     manager_selector.select_by_visible_text(foundations_manager)
     help_selector.select_by_visible_text(covid_help)
+
+
+# Sets 'established from' search criteria
+# REQUIRES: 'newly registered foundations' type to be selected for selection options
+def set_established_date(year, month):
+    print("    Setting established date")
+    time.sleep(1.5)
+    year_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_foundationOptions_ddlRulingYear"))
+    year_selector.select_by_visible_text(year)
+
+    time.sleep(1.5)
+    month_selector = Select(driver.find_element(By.ID, "ctl00_ctl00_fnContentBody_ContentFindFundersBody_foundationOptions_ddlRulingMonth"))
+    month_selector.select_by_visible_text(month)
 
 
 # Sets 'my tags' search criteria
