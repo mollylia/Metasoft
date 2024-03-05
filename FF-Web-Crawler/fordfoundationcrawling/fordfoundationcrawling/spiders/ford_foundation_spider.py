@@ -23,10 +23,11 @@ class FordFoundationSpider(CrawlSpider):
     def remove_media_files(self, html):
         soup = BeautifulSoup(html, 'html.parser')
 
-        for data in soup(['style', 'script', 'meta', 'img', 'button', 'input', 'figure', 'picture', 'select', 'svg']):
+        for data in soup(['style', 'script', 'meta', 'img', 'button', 'input', 'figure', 'picture', 'select']):
             data.decompose()
 
-        return soup
+        return soup.prettify()
+        # return soup
         # return ' '.join(soup.stripped_strings)
 
     def parse_item(self, response):
