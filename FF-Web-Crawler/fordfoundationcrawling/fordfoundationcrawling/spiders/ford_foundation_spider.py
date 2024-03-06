@@ -38,10 +38,24 @@ class FordFoundationSpider(CrawlSpider):
         file_name = name_split[len(name_split)-2] + ".html"
         return file_name
 
-
-    def save_file(self, file_name, content):
+    def change_directory(self, url, crawl_depth):
         os.chdir("fordfoundation.org")
+        directories = url[31:-1].split("/")
 
+        if crawl_depth != 1:
+            directories.pop()
+
+        for directory in directories:
+            if not os.path.exists(directory):
+                os.mkdir(directory)
+
+            os.chdir(directory)
+
+
+
+
+
+    def save_file(self, file_name, content, url):
         with open(file_name, 'w') as html_file:
             html_file.write(str(content))
 
@@ -54,7 +68,6 @@ class FordFoundationSpider(CrawlSpider):
         if not os.path.exists("fordfoundation.org"):
             os.mkdir("fordfoundation.org")
 
-
         # Gets the file name for the pages
         url = response.request.url
         crawl_depth = response.meta["depth"]
@@ -64,10 +77,15 @@ class FordFoundationSpider(CrawlSpider):
         page = requests.get(url)
         content = self.remove_media_files(page.content.decode())
 
-        # Saves the content in a directory, corresponding to the website's
-        self.save_file(file_name, content)
+        # Saves the content in a directory corresponding to the website
+        self.change_directory(url, crawl_depth)
+        self.save_file(file_name, content, url)
 
+
+        # curr_dir = os.getcwd()
+        #
         # yield {
+        #     "current directory": curr_dir,
         #     "file name": file_name,
         #     "url": url,
         #     "crawl depth": crawl_depth
