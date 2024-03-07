@@ -16,11 +16,10 @@ class FordFoundationSpider(CrawlSpider):
     }
 
     rules = (
-        # Rule(LinkExtractor(allow="work/"), callback="parse_item", follow=True),
-        Rule(LinkExtractor(allow="work/challenging-inequality/disability-rights"), callback="parse_item", follow=True),   # TODO: change rules later
-        # Rule(LinkExtractor(), callback="parse_item", follow=True)
+        Rule(LinkExtractor(allow="work/challenging-inequality/"), callback="parse_item", follow=True),
+        # Rule(LinkExtractor(allow="work/challenging-inequality/disability-rights"), callback="parse_item", follow=True),   # TODO: change rules later
+        # Rule(LinkExtractor(), callback="parse_item", follow=True),
     )
-
 
     def remove_media_files(self, html):
         soup = BeautifulSoup(html, "html.parser")
@@ -28,7 +27,6 @@ class FordFoundationSpider(CrawlSpider):
             data.decompose()
 
         return soup.prettify()
-
 
     def get_file_name(self, url, crawl_depth):
         if crawl_depth == 1:
@@ -38,7 +36,7 @@ class FordFoundationSpider(CrawlSpider):
         file_name = name_split[len(name_split)-2] + ".html"
         return file_name
 
-    def change_directory(self, url, crawl_depth):
+    def go_to_directory(self, url, crawl_depth):
         os.chdir("fordfoundation.org")
         directories = url[31:-1].split("/")
 
@@ -51,15 +49,18 @@ class FordFoundationSpider(CrawlSpider):
 
             os.chdir(directory)
 
-
-
-
-
-    def save_file(self, file_name, content, url):
+    def save_file(self, file_name, content):
         with open(file_name, 'w') as html_file:
             html_file.write(str(content))
 
+    def return_from_directory(self, url, crawl_depth):
+        directories = url[31:-1].split("/")
 
+        if crawl_depth != 1:
+            directories.pop()
+
+        for directory in directories:
+            os.chdir("..")
 
     def parse_item(self, response):
         os.chdir("..")
@@ -78,14 +79,11 @@ class FordFoundationSpider(CrawlSpider):
         content = self.remove_media_files(page.content.decode())
 
         # Saves the content in a directory corresponding to the website
-        self.change_directory(url, crawl_depth)
-        self.save_file(file_name, content, url)
+        self.go_to_directory(url, crawl_depth)
+        self.save_file(file_name, content)
+        self.return_from_directory(url, crawl_depth)
 
-
-        # curr_dir = os.getcwd()
-        #
         # yield {
-        #     "current directory": curr_dir,
         #     "file name": file_name,
         #     "url": url,
         #     "crawl depth": crawl_depth
