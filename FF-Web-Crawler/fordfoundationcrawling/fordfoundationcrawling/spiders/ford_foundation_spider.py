@@ -16,8 +16,9 @@ class FordFoundationSpider(CrawlSpider):
     }
 
     rules = (
-        Rule(LinkExtractor(allow="work/challenging-inequality/"), callback="parse_item", follow=True),
-        # Rule(LinkExtractor(allow="work/challenging-inequality/disability-rights"), callback="parse_item", follow=True),   # TODO: change rules later
+        Rule(LinkExtractor(allow="news-and-stories/"), callback="parse_item", follow=True),
+        # Rule(LinkExtractor(allow="work/challenging-inequality/"), callback="parse_item", follow=True),
+        # Rule(LinkExtractor(allow="work/challenging-inequality/disability-rights"), callback="parse_item", follow=True),
         # Rule(LinkExtractor(), callback="parse_item", follow=True),
     )
 
@@ -33,8 +34,14 @@ class FordFoundationSpider(CrawlSpider):
             return "index.html"
 
         name_split = url[31:].split("/")
-        file_name = name_split[len(name_split)-2] + ".html"
-        return file_name
+
+        if "page" in name_split:
+            page_index = name_split.index("page")
+            file_name = f"{name_split[page_index-1]}-{name_split[page_index]}-{name_split[page_index+1]}.html"
+            return file_name
+        else:
+            file_name = name_split[len(name_split)-2] + ".html"
+            return file_name
 
     def go_to_directory(self, url, crawl_depth):
         os.chdir("fordfoundation.org")
