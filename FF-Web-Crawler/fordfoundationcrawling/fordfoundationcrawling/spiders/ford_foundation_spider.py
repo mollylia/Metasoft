@@ -47,7 +47,7 @@ class FordFoundationSpider(CrawlSpider):
         os.chdir("fordfoundation.org")
         directories = url[31:-1].split("/")
 
-        if crawl_depth != 1:
+        if (crawl_depth != 1) or ("?filter_news_press_type=new" in directories):
             directories.pop()
 
         for directory in directories:
@@ -63,7 +63,7 @@ class FordFoundationSpider(CrawlSpider):
     def return_from_directory(self, url, crawl_depth):
         directories = url[31:-1].split("/")
 
-        if crawl_depth != 1:
+        if (crawl_depth != 1) or ("?filter_news_press_type=new" in directories):
             directories.pop()
 
         for directory in directories:
