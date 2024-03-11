@@ -45,11 +45,24 @@ class FordFoundationSpider(CrawlSpider):
         # Replaces href URL with file path
         for a in soup.findAll('a'):
             url = a['href']
+            file_path = "/fordfoundation.org/"
 
-            if url.split('/')[0] == "https:":
+            if url == "https://www.fordfoundation.org/":
+                a['href'] = f"{file_path}index.html"
+
+            elif url.split('/')[0] == "":
+                directories = url[1:-1].split('/')
+                file_name = directories.pop()
+
+                for directory in directories:
+                    file_path += f"{directory}/"
+
+                file_path += f"{file_name}.html"
+                a['href'] = file_path
+
+            elif url.split('/')[0] == "https:":
                 directories = url[31:-1].split('/')
                 file_name = directories.pop()
-                file_path = "/fordfoundation.org/"
 
                 for directory in directories:
                     file_path += f"{directory}/"
