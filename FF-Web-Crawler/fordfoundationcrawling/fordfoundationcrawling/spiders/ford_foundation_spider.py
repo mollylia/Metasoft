@@ -17,9 +17,9 @@ class FordFoundationSpider(CrawlSpider):
 
     rules = (
         # Rule(LinkExtractor(allow="news-and-stories/"), callback="parse_item", follow=True),
-        Rule(LinkExtractor(allow="work/challenging-inequality/"), callback="parse_item", follow=True),
+        # Rule(LinkExtractor(allow="work/challenging-inequality/"), callback="parse_item", follow=True),
         # Rule(LinkExtractor(allow="work/challenging-inequality/disability-rights"), callback="parse_item", follow=True),
-        # Rule(LinkExtractor(), callback='parse_item', follow=True),
+        Rule(LinkExtractor(), callback='parse_item', follow=True),
     )
 
     def get_file_name(self, url):
@@ -30,10 +30,10 @@ class FordFoundationSpider(CrawlSpider):
 
         if "page" in name_split:
             page_index = name_split.index('page')
-            file_name = f"{name_split[page_index-1]}-{name_split[page_index]}-{name_split[page_index+1]}.html"
+            file_name = f"{name_split[page_index - 1]}-{name_split[page_index]}-{name_split[page_index + 1]}.html"
             return file_name
         else:
-            file_name = f"{name_split[len(name_split)-2]}.html"
+            file_name = f"{name_split[len(name_split) - 2]}.html"
             return file_name
 
     def get_page_content(self, html):
@@ -63,7 +63,9 @@ class FordFoundationSpider(CrawlSpider):
         os.chdir('fordfoundation.org')
         directories = url[31:-1].split('/')
 
-        # if len(directories) > 1:
+        if len(directories) == 1:
+            return
+
         directories.pop()
         if "?filter_news_press_type=new" in directories:
             directories.pop()
@@ -77,7 +79,9 @@ class FordFoundationSpider(CrawlSpider):
     def return_from_directory(self, url):
         directories = url[31:-1].split('/')
 
-        # if len(directories) > 1:
+        if len(directories) == 1:
+            return
+
         directories.pop()
         if "?filter_news_press_type=new" in directories:
             directories.pop()
@@ -85,11 +89,9 @@ class FordFoundationSpider(CrawlSpider):
         for directory in directories:
             os.chdir('..')
 
-
     def save_file(self, file_name, content):
         with open(file_name, 'w') as html_file:
             html_file.write(str(content))
-
 
     def parse_item(self, response):
         os.chdir('..')
