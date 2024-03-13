@@ -23,18 +23,19 @@ class FordFoundationSpider(CrawlSpider):
     )
 
     def get_file_name(self, url):
-        if url == "https://www.fordfoundation.org/":
+        if url == 'https://www.fordfoundation.org/':
             return "index.html"
 
-        name_split = url[31:].split('/')
-
-        if "page" in name_split:
+        name_split = url[:-1].split('/')
+        if 'page' in name_split:
             page_index = name_split.index('page')
-            file_name = f"{name_split[page_index - 1]}-{name_split[page_index]}-{name_split[page_index + 1]}.html"
-            return file_name
+            file_name = f"{name_split[page_index-1]}-{name_split[page_index]}-{name_split[page_index+1]}.html"
         else:
-            file_name = f"{name_split[len(name_split) - 2]}.html"
-            return file_name
+            substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
+            name_split = [item for item in name_split if not any(substring in item for substring in substrings_to_remove)]
+            file_name = f"{name_split.pop()}.html"
+
+        return file_name
 
     def get_page_content(self, html):
         # Removes media files and CSS selectors
@@ -74,29 +75,37 @@ class FordFoundationSpider(CrawlSpider):
 
     def go_to_directory(self, url):
         os.chdir('fordfoundation.org')
-        directories = url[31:-1].split('/')
 
-        if len(directories) == 1:
+        directories = url[:-1].split('/')
+        directories = directories[3:]
+
+        if len(directories) in [0, 1]:
             return
-
-        directories.pop()
-        if "?filter_news_press_type=new" in directories:
+        elif 'page' in directories:
+            page_index = directories.index('page')
+            directories = directories[:page_index-1]
+        else:
+            substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
+            directories = [item for item in directories if not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
         for directory in directories:
             if not os.path.exists(directory):
                 os.mkdir(directory)
-
             os.chdir(directory)
 
     def return_from_directory(self, url):
-        directories = url[31:-1].split('/')
+        directories = url[:-1].split('/')
+        directories = directories[3:]
 
-        if len(directories) == 1:
+        if len(directories) in [0, 1]:
             return
-
-        directories.pop()
-        if "?filter_news_press_type=new" in directories:
+        elif 'page' in directories:
+            page_index = directories.index('page')
+            directories = directories[:page_index-1]
+        else:
+            substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
+            directories = [item for item in directories if not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
         for directory in directories:
@@ -115,7 +124,7 @@ class FordFoundationSpider(CrawlSpider):
 
         # Gets the file name for the pages
         url = response.request.url
-        crawl_depth = response.meta['depth']
+        # crawl_depth = response.meta['depth']
         file_name = self.get_file_name(url)
 
         # Get the content from the crawled pages
@@ -129,6 +138,6 @@ class FordFoundationSpider(CrawlSpider):
 
         yield {
             "file name": file_name,
-            "url": url,
-            "crawl depth": crawl_depth
+            "url": url
+            # , "crawl depth": crawl_depth
         }
