@@ -12,7 +12,7 @@ class FordFoundationSpider(CrawlSpider):
     start_urls = ['https://www.fordfoundation.org/']
 
     custom_settings = {
-        'DEPTH_LIMIT': 3
+        'DEPTH_LIMIT': 1
     }
 
     rules = (
@@ -108,7 +108,7 @@ class FordFoundationSpider(CrawlSpider):
             directories = [item for item in directories if not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
-        for directory in directories:
+        for directory in range(len(directories)):
             os.chdir('..')
 
     def save_file(self, file_name, content):
@@ -124,7 +124,7 @@ class FordFoundationSpider(CrawlSpider):
 
         # Gets the file name for the pages
         url = response.request.url
-        # crawl_depth = response.meta['depth']
+        crawl_depth = response.meta['depth']
         file_name = self.get_file_name(url)
 
         # Get the content from the crawled pages
@@ -139,5 +139,5 @@ class FordFoundationSpider(CrawlSpider):
         yield {
             "file name": file_name,
             "url": url
-            # , "crawl depth": crawl_depth
+            #, "crawl depth": crawl_depth
         }
