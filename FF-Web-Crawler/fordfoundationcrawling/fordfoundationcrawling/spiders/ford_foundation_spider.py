@@ -78,7 +78,7 @@ class FordFoundationSpider(CrawlSpider):
         os.chdir('fordfoundation.org')
         directories = url[:-1].split('/')[3:]
 
-        if len(directories) in [0, 1]:
+        if (len(directories) in [0, 1]) or (directories[0] == 'cdn-cgi'):
             return
         elif 'page' in directories:
             page_index = directories.index('page')
@@ -96,7 +96,7 @@ class FordFoundationSpider(CrawlSpider):
     def return_from_directory(self, url):
         directories = url[:-1].split('/')[3:]
 
-        if len(directories) in [0, 1]:
+        if (len(directories) in [0, 1]) or (directories[0] == 'cdn-cgi'):
             return
         elif 'page' in directories:
             page_index = directories.index('page')
