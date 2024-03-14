@@ -12,7 +12,7 @@ class FordFoundationSpider(CrawlSpider):
     start_urls = ['https://www.fordfoundation.org/']
 
     custom_settings = {
-        'DEPTH_LIMIT': 1
+        'DEPTH_LIMIT': 3
     }
 
     rules = (
@@ -45,39 +45,38 @@ class FordFoundationSpider(CrawlSpider):
 
         # Replaces href URL with file path
         for a in soup.findAll('a'):
-            url = a['href']
-            file_path = "/fordfoundation.org/"
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/fordfoundation.org/"
 
-            if url == "https://www.fordfoundation.org/":
-                a['href'] = f"{file_path}index.html"
+                if url == "https://www.fordfoundation.org/":
+                    a['href'] = f"{file_path}index.html"
 
-            elif url.split('/')[0] == "":
-                directories = url[1:-1].split('/')
-                file_name = directories.pop()
+                elif url.split('/')[0] == "":
+                    directories = url[1:-1].split('/')
+                    file_name = directories.pop()
 
-                for directory in directories:
-                    file_path += f"{directory}/"
+                    for directory in directories:
+                        file_path += f"{directory}/"
 
-                file_path += f"{file_name}.html"
-                a['href'] = file_path
+                    file_path += f"{file_name}.html"
+                    a['href'] = file_path
 
-            elif url.split('/')[0] == "https:":
-                directories = url[31:-1].split('/')
-                file_name = directories.pop()
+                elif url.split('/')[0] == "https:":
+                    directories = url[31:-1].split('/')
+                    file_name = directories.pop()
 
-                for directory in directories:
-                    file_path += f"{directory}/"
+                    for directory in directories:
+                        file_path += f"{directory}/"
 
-                file_path += f"{file_name}.html"
-                a['href'] = file_path
+                    file_path += f"{file_name}.html"
+                    a['href'] = file_path
 
         return soup.prettify()
 
     def go_to_directory(self, url):
         os.chdir('fordfoundation.org')
-
-        directories = url[:-1].split('/')
-        directories = directories[3:]
+        directories = url[:-1].split('/')[3:]
 
         if len(directories) in [0, 1]:
             return
@@ -95,8 +94,7 @@ class FordFoundationSpider(CrawlSpider):
             os.chdir(directory)
 
     def return_from_directory(self, url):
-        directories = url[:-1].split('/')
-        directories = directories[3:]
+        directories = url[:-1].split('/')[3:]
 
         if len(directories) in [0, 1]:
             return
@@ -136,8 +134,7 @@ class FordFoundationSpider(CrawlSpider):
         self.save_file(file_name, content)
         self.return_from_directory(url)
 
-        yield {
-            "file name": file_name,
-            "url": url
-            #, "crawl depth": crawl_depth
-        }
+        # yield {
+        #     "file name": file_name,
+        #     "url": url
+        # }
