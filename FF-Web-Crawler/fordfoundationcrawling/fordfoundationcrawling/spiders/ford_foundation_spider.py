@@ -49,12 +49,16 @@ class FordFoundationSpider(CrawlSpider):
                 url = a['href']
                 file_path = "/fordfoundation.org/"
 
-                if url == "https://www.fordfoundation.org/":
+                if url == 'https://www.fordfoundation.org/':
                     a['href'] = f"{file_path}index.html"
 
-                elif url.split('/')[0] == "":
-                    directories = url[1:-1].split('/')
-                    file_name = directories.pop()
+                elif url.split('/')[0] == '':
+                    directories = url[1:].split('/')
+                    if directories[len(directories)-1] == '':
+                        directories.pop()
+
+                    if directories:
+                        file_name = directories.pop()
 
                     for directory in directories:
                         file_path += f"{directory}/"
@@ -62,7 +66,7 @@ class FordFoundationSpider(CrawlSpider):
                     file_path += f"{file_name}.html"
                     a['href'] = file_path
 
-                elif url.split('/')[0] == "https:":
+                elif url.split('/')[0] == 'https:':
                     directories = url[31:-1].split('/')
                     file_name = directories.pop()
 
