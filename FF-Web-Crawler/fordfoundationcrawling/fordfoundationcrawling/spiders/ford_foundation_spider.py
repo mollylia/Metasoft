@@ -66,7 +66,8 @@ class FordFoundationSpider(CrawlSpider):
                     file_path += f"{file_name}.html"
                     a['href'] = file_path
 
-                elif url.split('/')[0] == 'https:':
+                elif ((url.split('/')[0] == 'https:') and (url.split('/')[2] == 'www.fordfoundation.org')
+                      and ('pdf' not in url.split('.'))):
                     directories = url[31:-1].split('/')
                     file_name = directories.pop()
 
@@ -140,5 +141,6 @@ class FordFoundationSpider(CrawlSpider):
 
         # yield {
         #     "file name": file_name,
-        #     "url": url
+        #     "url": url,
+        #     "crawl depth": crawl_depth
         # }
