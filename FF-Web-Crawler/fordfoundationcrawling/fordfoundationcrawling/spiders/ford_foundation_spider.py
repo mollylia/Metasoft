@@ -28,9 +28,6 @@ class FordFoundationSpider(CrawlSpider):
             page_index = name_split.index('page')
             file_name = f"{name_split[page_index-1]}-{name_split[page_index]}-{name_split[page_index+1]}.html"
         else:
-            substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
-            name_split = [item for item in name_split if
-                          not any(substring in item for substring in substrings_to_remove)]
             file_name = f"{name_split.pop()}.html"
 
         return file_name
@@ -64,8 +61,7 @@ class FordFoundationSpider(CrawlSpider):
                         file_path += f"{file_name}.html"
                         a['href'] = file_path
 
-                elif (url.split('/')[0] == 'https:') and (url.split('/')[2] == 'www.fordfoundation.org') and (
-                        'pdf' not in url.split('.')):
+                elif (url.split('/')[0] == 'https:') and (url.split('/')[2] == 'www.fordfoundation.org') and ('pdf' not in url.split('.')):
                     directories = url[31:-1].split('/')
                     file_name = directories.pop()
 
@@ -87,9 +83,6 @@ class FordFoundationSpider(CrawlSpider):
             page_index = directories.index('page')
             directories = directories[:page_index - 1]
         else:
-            substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
-            directories = [item for item in directories if
-                           not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
         for directory in directories:
@@ -106,9 +99,6 @@ class FordFoundationSpider(CrawlSpider):
             page_index = directories.index('page')
             directories = directories[:page_index - 1]
         else:
-            substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
-            directories = [item for item in directories if
-                           not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
         for directory in range(len(directories)):
@@ -120,7 +110,7 @@ class FordFoundationSpider(CrawlSpider):
 
     def parse_item(self, response):
         url = response.request.url
-        if 'preprod' in url:
+        if ('preprod' in url) or ('?' in url):
             return
 
         # Creates a directory to save crawled pages if it doesn't already exist
@@ -129,8 +119,6 @@ class FordFoundationSpider(CrawlSpider):
             os.mkdir('fordfoundation.org')
 
         # Gets the file name for the pages
-        # url = response.request.url
-        crawl_depth = response.meta['depth']
         file_name = self.get_file_name(url)
 
         # Get the content from the crawled pages
@@ -141,9 +129,3 @@ class FordFoundationSpider(CrawlSpider):
         self.go_to_directory(url)
         self.save_file(file_name, content)
         self.return_from_directory(url)
-
-        # yield {
-        #     "file name": file_name,
-        #     "url": url,
-        #     "crawl depth": crawl_depth
-        # }
