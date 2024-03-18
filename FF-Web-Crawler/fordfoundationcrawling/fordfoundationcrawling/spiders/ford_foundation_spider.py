@@ -12,13 +12,10 @@ class FordFoundationSpider(CrawlSpider):
     start_urls = ['https://www.fordfoundation.org/']
 
     custom_settings = {
-        'DEPTH_LIMIT': 3
+        'DEPTH_LIMIT': 5
     }
 
     rules = (
-        # Rule(LinkExtractor(allow="news-and-stories/"), callback="parse_item", follow=True),
-        # Rule(LinkExtractor(allow="work/challenging-inequality/"), callback="parse_item", follow=True),
-        # Rule(LinkExtractor(allow="work/challenging-inequality/disability-rights"), callback="parse_item", follow=True),
         Rule(LinkExtractor(), callback='parse_item', follow=True),
     )
 
@@ -32,7 +29,8 @@ class FordFoundationSpider(CrawlSpider):
             file_name = f"{name_split[page_index-1]}-{name_split[page_index]}-{name_split[page_index+1]}.html"
         else:
             substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
-            name_split = [item for item in name_split if not any(substring in item for substring in substrings_to_remove)]
+            name_split = [item for item in name_split if
+                          not any(substring in item for substring in substrings_to_remove)]
             file_name = f"{name_split.pop()}.html"
 
         return file_name
@@ -54,20 +52,20 @@ class FordFoundationSpider(CrawlSpider):
 
                 elif url.split('/')[0] == '':
                     directories = url[1:].split('/')
-                    if directories[len(directories)-1] == '':
+                    if directories[len(directories) - 1] == '':
                         directories.pop()
 
                     if directories:
                         file_name = directories.pop()
 
-                    for directory in directories:
-                        file_path += f"{directory}/"
+                        for directory in directories:
+                            file_path += f"{directory}/"
 
-                    file_path += f"{file_name}.html"
-                    a['href'] = file_path
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
 
-                elif ((url.split('/')[0] == 'https:') and (url.split('/')[2] == 'www.fordfoundation.org')
-                      and ('pdf' not in url.split('.'))):
+                elif (url.split('/')[0] == 'https:') and (url.split('/')[2] == 'www.fordfoundation.org') and (
+                        'pdf' not in url.split('.')):
                     directories = url[31:-1].split('/')
                     file_name = directories.pop()
 
@@ -87,10 +85,11 @@ class FordFoundationSpider(CrawlSpider):
             return
         elif 'page' in directories:
             page_index = directories.index('page')
-            directories = directories[:page_index-1]
+            directories = directories[:page_index - 1]
         else:
             substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
-            directories = [item for item in directories if not any(substring in item for substring in substrings_to_remove)]
+            directories = [item for item in directories if
+                           not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
         for directory in directories:
@@ -105,10 +104,11 @@ class FordFoundationSpider(CrawlSpider):
             return
         elif 'page' in directories:
             page_index = directories.index('page')
-            directories = directories[:page_index-1]
+            directories = directories[:page_index - 1]
         else:
             substrings_to_remove = ["?filter", "?query", "?grant", "?popup"]
-            directories = [item for item in directories if not any(substring in item for substring in substrings_to_remove)]
+            directories = [item for item in directories if
+                           not any(substring in item for substring in substrings_to_remove)]
             directories.pop()
 
         for directory in range(len(directories)):
@@ -119,14 +119,17 @@ class FordFoundationSpider(CrawlSpider):
             html_file.write(str(content))
 
     def parse_item(self, response):
-        os.chdir('..')
+        url = response.request.url
+        if 'preprod' in url:
+            return
 
         # Creates a directory to save crawled pages if it doesn't already exist
+        os.chdir('..')
         if not os.path.exists('fordfoundation.org'):
             os.mkdir('fordfoundation.org')
 
         # Gets the file name for the pages
-        url = response.request.url
+        # url = response.request.url
         crawl_depth = response.meta['depth']
         file_name = self.get_file_name(url)
 
