@@ -16,6 +16,7 @@ class LillyEndowmentSpider(CrawlSpider):
         os.mkdir('lillyendowment.org')
     os.chdir('lillyendowment.org')
 
+    # For testing, remove later
     custom_settings = {
         'DEPTH_LIMIT': 1
     }

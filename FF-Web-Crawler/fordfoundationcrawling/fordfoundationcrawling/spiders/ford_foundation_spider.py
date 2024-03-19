@@ -11,10 +11,6 @@ class FordFoundationSpider(CrawlSpider):
     allowed_domains = ['fordfoundation.org']
     start_urls = ['https://www.fordfoundation.org/']
 
-    custom_settings = {
-        'DEPTH_LIMIT': 5
-    }
-
     rules = (
         Rule(LinkExtractor(), callback='parse_item', follow=True),
     )
