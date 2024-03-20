@@ -4,7 +4,7 @@
 ```
 # Make sure you are in the project directory FF-Web-Crawler
 
-# Install frameworks
+# Install frameworks/packages
 pip install scrapy
 pip install beautifulsoup4
 
