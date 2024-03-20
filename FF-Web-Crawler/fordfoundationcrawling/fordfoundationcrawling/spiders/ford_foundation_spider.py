@@ -45,7 +45,7 @@ class FordFoundationSpider(CrawlSpider):
 
                 elif url.split('/')[0] == '':
                     directories = url[1:].split('/')
-                    if directories[len(directories) - 1] == '':
+                    if directories[len(directories)-1] == '':
                         directories.pop()
 
                     if directories:

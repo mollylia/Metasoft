@@ -13,6 +13,7 @@ SPIDER_MODULES = ["fordfoundationcrawling.spiders"]
 NEWSPIDER_MODULE = "fordfoundationcrawling.spiders"
 
 DEPTH_LIMIT = 5
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "fordfoundationcrawling (+http://www.yourdomain.com)"
 
