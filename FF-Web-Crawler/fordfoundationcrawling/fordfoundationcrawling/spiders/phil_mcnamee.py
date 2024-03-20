@@ -11,16 +11,6 @@ class PhilMcNameeSpider(CrawlSpider):
     allowed_domains = ['solitudenaturereserve.com']
     start_urls = ['https://solitudenaturereserve.com/']
 
-    # TODO: move this to parse_item
-    os.chdir('..')
-    if not os.path.exists('solitudenaturereserve.com'):
-        os.mkdir('solitudenaturereserve.com')
-    os.chdir('solitudenaturereserve.com')
-
-    custom_settings = {
-        'DEPTH_LIMIT': 1
-    }
-
     rules = (
         Rule(LinkExtractor(), callback='parse_item', follow=True),
     )
@@ -61,22 +51,47 @@ class PhilMcNameeSpider(CrawlSpider):
 
         return soup.prettify()
 
+    def go_to_directory(self, url):
+        os.chdir('solitudenaturereserve.com')
+        directories = url[:-1].split('/')[3:]
+
+        if len(directories) in [0, 1]:
+            return
+        else:
+            directories.pop()
+            for directory in directories:
+                if not os.path.exists(directory):
+                    os.mkdir(directory)
+                os.chdir(directory)
+
+    def return_from_directory(self, url):
+        directories = url[:-1].split('/')[3:]
+
+        if len(directories) in [0, 1]:
+            return
+        else:
+            directories.pop()
+            for directory in range(len(directories)):
+                os.chdir('..')
+
+    def save_file(self, file_name, content):
+        with open(file_name, 'w') as html_file:
+            html_file.write(str(content))
+
     def parse_item(self, response):
-        url = response.request.url
+        os.chdir('..')
+        if not os.path.exists('solitudenaturereserve.com'):
+            os.mkdir('solitudenaturereserve.com')
 
         # Gets the file name for the pages
+        url = response.request.url
         file_name = self.get_file_name(url)
-        crawl_depth = response.meta['depth']
 
         # Get the content from the crawled pages
         page = requests.get(url)
         content = self.get_page_content(page.content.decode())
 
-        with open(file_name, 'w') as html_file:
-            html_file.write(str(content))
-
-        yield {
-            "file name": file_name,
-            "url": url,
-            "depth": crawl_depth
-        }
+        # Saves the content in a directory corresponding to the website
+        self.go_to_directory(url)
+        self.save_file(file_name, content)
+        self.return_from_directory(url)
