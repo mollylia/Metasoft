@@ -41,7 +41,8 @@ class AzrieliFoundationSpider(CrawlSpider):
 
                 if (url == 'http://www.azrielifoundation.org') or (url == 'https://architectureprize.azrielifoundation.org/'):
                     a['href'] = f"{file_path}index.html"
-
+                elif url == 'https://memoirs.azrielifoundation.org/':
+                    a['href'] = f"{file_path}index-memoirs.html"
                 elif ('https://azrielifoundation.org/' in url) or ('https://architectureprize.azrielifoundation.org/' in url):
                     directories = url.split('/')[3:]
                     if directories[len(directories)-1] == '':
