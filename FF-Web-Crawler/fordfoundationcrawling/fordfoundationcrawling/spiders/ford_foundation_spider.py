@@ -18,6 +18,8 @@ class FordFoundationSpider(CrawlSpider):
     def get_file_name(self, url):
         if url == 'https://www.fordfoundation.org/':
             return "index.html"
+        elif 'email-protection' in url:
+            return "email-protection.html"
 
         name_split = url[:-1].split('/')
         if 'page' in name_split:
@@ -43,6 +45,9 @@ class FordFoundationSpider(CrawlSpider):
                 if url == 'https://www.fordfoundation.org/':
                     a['href'] = f"{file_path}index.html"
 
+                elif '/cdn-cgi/l' in url:
+                    a['href'] = f"{file_path}email-protection.html"
+
                 elif url.split('/')[0] == '':
                     directories = url[1:].split('/')
                     if directories[len(directories)-1] == '':
@@ -50,7 +55,6 @@ class FordFoundationSpider(CrawlSpider):
 
                     if directories:
                         file_name = directories.pop()
-
                         for directory in directories:
                             file_path += f"{directory}/"
 
