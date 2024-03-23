@@ -11,10 +11,6 @@ class JCFMontrealSpider(CrawlSpider):
     allowed_domains = ['jcfmontreal.org']
     start_urls = ['https://jcfmontreal.org/']
 
-    custom_settings = {
-        'DEPTH_LIMIT': 1
-    }
-
     rules = (
         Rule(LinkExtractor(), callback='parse_item', follow=True),
     )
@@ -35,6 +31,29 @@ class JCFMontrealSpider(CrawlSpider):
         soup = BeautifulSoup(html, 'html.parser')
         for data in soup(['script', 'meta', 'style', 'img', 'video', 'button', 'input', 'iframe']):
             data.decompose()
+
+        # Replaces href URL with file path
+        for a in soup.findAll('a'):
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/jcfmontreal.org/"
+
+                if url == 'https://jcfmontreal.org/':
+                    a['href'] = f"{file_path}index.html"
+
+                elif '/cdn-cgi/l' in url:
+                    a['href'] = f"{file_path}email-protection.html"
+
+                elif 'https://jcfmontreal.org/' in url:
+                    directories = url[:-1].split('/')[3:]
+                    if directories:
+                        file_name = directories.pop()
+
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
 
         return soup.prettify()
 
@@ -86,9 +105,3 @@ class JCFMontrealSpider(CrawlSpider):
         self.go_to_directory(url)
         self.save_file(file_name, content)
         self.return_from_directory(url)
-
-        yield {
-            "file name": file_name,
-            "url": url,
-            "depth": crawl_depth
-        }
