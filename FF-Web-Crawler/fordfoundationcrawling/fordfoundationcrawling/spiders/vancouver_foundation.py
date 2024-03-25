@@ -1,8 +1,9 @@
 import os.path
+import requests
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-
+from bs4 import BeautifulSoup
 
 class VancouverFoundationSpider(CrawlSpider):
     name = 'vancouver'
@@ -16,7 +17,7 @@ class VancouverFoundationSpider(CrawlSpider):
     os.chdir('vancouverfoundation.ca')
 
     custom_settings = {
-        'DEPTH_LIMIT': 5
+        'DEPTH_LIMIT': 1
     }
 
     rules = (
@@ -36,6 +37,13 @@ class VancouverFoundationSpider(CrawlSpider):
 
         return file_name
 
+    def get_page_content(self, html):
+        soup = BeautifulSoup(html, 'html.parser')
+        for data in soup(['script', 'meta', 'style', 'img', 'button', 'input']):
+            data.decompose()
+
+        return soup.prettify()
+
     def parse_item(self, response):
         url = response.request.url
         if ('?' in url) or ('/l/' in url) or ('/e/' in url) or ('/s/' in url) or ('.zip' in url):
@@ -44,6 +52,13 @@ class VancouverFoundationSpider(CrawlSpider):
         # Gets the file name for the pages
         file_name = self.get_file_name(url)
         crawl_depth = response.meta['depth']
+
+        # Get the content from the crawled pages
+        page = requests.get(url)
+        content = self.get_page_content(page.content.decode())
+
+        with open(file_name, 'w') as html_file:
+            html_file.write(str(content))
 
         yield {
             "file name": file_name,
