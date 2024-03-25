@@ -16,7 +16,7 @@ class VancouverFoundationSpider(CrawlSpider):
     os.chdir('vancouverfoundation.ca')
 
     custom_settings = {
-        'DEPTH_LIMIT': 1
+        'DEPTH_LIMIT': 5
     }
 
     rules = (
@@ -26,11 +26,15 @@ class VancouverFoundationSpider(CrawlSpider):
     def get_file_name(self, url):
         if url == 'https://www.vancouverfoundation.ca/#content':
             return "index.html"
-        else:
-            name_split = url[:-1].split('/')
-            file_name = f"{name_split.pop()}.html"
-            return file_name
 
+        name_split = url[:-1].split('/')
+        if 'page' in url:
+            page_index = name_split.index('page')
+            file_name = f"{name_split[page_index-1]}-{name_split[page_index]}-{name_split[page_index+1]}.html"
+        else:
+            file_name = f"{name_split.pop()}.html"
+
+        return file_name
 
     def parse_item(self, response):
         url = response.request.url
