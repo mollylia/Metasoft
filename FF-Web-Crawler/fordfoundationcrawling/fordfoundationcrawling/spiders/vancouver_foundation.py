@@ -42,6 +42,39 @@ class VancouverFoundationSpider(CrawlSpider):
         for data in soup(['script', 'meta', 'style', 'img', 'button', 'input']):
             data.decompose()
 
+        # Replaces href URL with file path
+        for a in soup.findAll('a'):
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/vancouverfoundation.ca/"
+
+                if url == 'https://www.vancouverfoundation.ca/':
+                    a['href'] = f"{file_path}index.html"
+
+                elif url.split('/')[0] == '':
+                    directories = url[1:].split('/')
+                    if directories[len(directories)-1] == '':
+                        directories.pop()
+
+                    if directories:
+                        file_name = directories.pop()
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
+
+                elif 'https://www.vancouverfoundation.ca/' in url:
+                    directories = url.split('/')[3:-1]
+                    if directories:
+                        file_name = directories.pop()
+
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
+
         return soup.prettify()
 
     def parse_item(self, response):
