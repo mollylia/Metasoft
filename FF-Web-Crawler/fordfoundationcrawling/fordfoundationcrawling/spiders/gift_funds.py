@@ -28,6 +28,28 @@ class SickKidsFoundationSpider(CrawlSpider):
         for data in soup(['script', 'meta', 'img', 'button', 'select']):
             data.decompose()
 
+        # Replaces href URL with file path
+        for a in soup.findAll('a'):
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/giftfunds.com/"
+
+                if url == '/':
+                    a['href'] = f"{file_path}index.html"
+
+                elif url.split('/')[0] == '':
+                    directories = url[1:].split('/')
+                    if directories[len(directories)-1] == '':
+                        directories.pop()
+
+                    if directories:
+                        file_name = directories.pop()
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
+
         return soup.prettify()
 
     def go_to_directory(self, url):
@@ -64,7 +86,6 @@ class SickKidsFoundationSpider(CrawlSpider):
         # Gets the file name for the pages
         url = response.request.url
         file_name = self.get_file_name(url)
-        crawl_depth = response.meta['depth']
 
         # Get the content from the crawled pages
         page = requests.get(url)
@@ -74,9 +95,3 @@ class SickKidsFoundationSpider(CrawlSpider):
         self.go_to_directory(url)
         self.save_file(file_name, content)
         self.return_from_directory(url)
-
-        yield {
-            "file name": file_name,
-            "url": url,
-            "depth": crawl_depth
-        }
