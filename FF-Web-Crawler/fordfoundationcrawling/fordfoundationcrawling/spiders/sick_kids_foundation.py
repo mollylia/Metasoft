@@ -11,10 +11,6 @@ class SickKidsFoundationSpider(CrawlSpider):
     allowed_domains = ['sickkidsfoundation.com']
     start_urls = ['https://www.sickkidsfoundation.com/']
 
-    custom_settings = {
-        'DEPTH_LIMIT': 5
-    }
-
     rules = (
         Rule(LinkExtractor(allowed_domains), callback='parse_item', follow=True),
     )
@@ -34,6 +30,23 @@ class SickKidsFoundationSpider(CrawlSpider):
         soup = BeautifulSoup(html, 'html.parser')
         for data in soup(['script', 'meta', 'img', 'button', 'input']):
             data.decompose()
+
+        # Replaces href URL with file path
+        for a in soup.findAll('a'):
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/sickkidsfoundation.com"
+
+                if url == '/':
+                    a['href'] = f"{file_path}/index.html"
+
+                elif url.split('/')[0] == '':
+                    file_path += f"{url}.html"
+                    a['href'] = file_path
+
+                elif 'http://www.sickkidsfoundation.com/' in url:
+                    file_path += f"{url[33:]}.html"
+                    a['href'] = file_path
 
         return soup.prettify()
 
@@ -79,7 +92,6 @@ class SickKidsFoundationSpider(CrawlSpider):
 
         # Gets the file name for the pages
         file_name = self.get_file_name(url)
-        crawl_depth = response.meta['depth']
 
         # Get the content from the crawled pages
         page = requests.get(url)
@@ -89,9 +101,3 @@ class SickKidsFoundationSpider(CrawlSpider):
         self.go_to_directory(url)
         self.save_file(file_name, content)
         self.return_from_directory(url)
-
-        yield {
-            "file name": file_name,
-            "url": url,
-            "depth": crawl_depth
-        }
