@@ -1,6 +1,6 @@
 import os.path
-import scrapy
 
+import scrapy
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
 
@@ -16,9 +16,17 @@ class MastercardFoundationSpider(scrapy.Spider):
         os.mkdir('mastercardfoundation.org')
     os.chdir('mastercardfoundation.org')
 
+    # custom_settings = {
+    #     'DEPTH_LIMIT': 1
+    # }
+
+    # rules = (
+    #     Rule(LinkExtractor(allow_domains=allowed_domains), callback='parse_item', follow=True),
+    # )
+
     def start_requests(self):
-        url = 'https://mastercardfdn.org/'
-        yield SeleniumRequest(url=url, callback=self.parse_item)
+        for url in self.start_urls:
+            yield SeleniumRequest(url=url, callback=self.parse_item)
 
     def get_file_name(self, url):
         if url == 'https://mastercardfdn.org/':
@@ -54,3 +62,12 @@ class MastercardFoundationSpider(scrapy.Spider):
             "url": url,
             "depth": crawl_depth
         }
+
+        # if crawl_depth < self.settings.get('DEPTH_LIMIT'):
+        if crawl_depth == 0:
+            soup = BeautifulSoup(html_content, 'html.parser')
+            for link in soup.find_all('a', href=True):
+                next_url = response.urljoin(link['href'])
+
+                if self.allowed_domains[0] in next_url:
+                    yield SeleniumRequest(url=next_url, callback=self.parse_item)
