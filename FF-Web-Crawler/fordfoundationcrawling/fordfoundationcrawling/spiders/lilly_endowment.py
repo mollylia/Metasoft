@@ -10,12 +10,6 @@ class LillyEndowmentSpider(scrapy.Spider):
     allowed_domains = ['lillyendowment.org']
     start_urls = ['https://lillyendowment.org/']
 
-    # TODO: move this to parse_item
-    os.chdir('..')
-    if not os.path.exists('lillyendowment.org'):
-        os.mkdir('lillyendowment.org')
-    os.chdir('lillyendowment.org')
-
     def start_requests(self):
         for url in self.start_urls:
             yield SeleniumRequest(url=url, callback=self.parse_item)
@@ -35,11 +29,40 @@ class LillyEndowmentSpider(scrapy.Spider):
 
         return soup.prettify()
 
+    def go_to_directory(self, url):
+        os.chdir('lillyendowment.org')
+        directories = url[:-1].split('/')[3:]
+
+        if (len(directories) in [0, 1]) or (directories[0] == 'cdn-cgi'):
+            return
+        else:
+            directories.pop()
+
+        for directory in directories:
+            if not os.path.exists(directory):
+                os.mkdir(directory)
+            os.chdir(directory)
+
+    def return_from_directory(self, url):
+        directories = url[:-1].split('/')[3:]
+
+        if len(directories) in [0, 1]:
+            return
+        else:
+            directories.pop()
+
+        for directory in range(len(directories)):
+            os.chdir('..')
+
     def save_file(self, file_name, content):
         with open(file_name, 'w') as html_file:
             html_file.write(str(content))
 
     def parse_item(self, response):
+        os.chdir('..')
+        if not os.path.exists('lillyendowment.org'):
+            os.mkdir('lillyendowment.org')
+
         # Gets the file name for the pages
         url = response.request.url
         file_name = self.get_file_name(url)
@@ -49,8 +72,10 @@ class LillyEndowmentSpider(scrapy.Spider):
         html_content = response.body
         content = self.get_page_content(html_content)
 
-        # Saves the content
+        # Saves the content in a directory corresponding to the website
+        self.go_to_directory(url)
         self.save_file(file_name, content)
+        self.return_from_directory(url)
 
         yield {
             "file name": file_name,
