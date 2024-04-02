@@ -27,6 +27,26 @@ class MastercardFoundationSpider(scrapy.Spider):
         for data in soup(['script', 'meta', 'style', 'img', 'iframe', 'button', 'input', 'select']):
             data.decompose()
 
+        # Replaces href URL with file path
+        for a in soup.findAll('a'):
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/mastercardfoundation.org/"
+
+                if url == 'https://mastercardfdn.org/':
+                    a['href'] = f"{file_path}index.html"
+
+                elif 'mastercardfdn.org' in url:
+                    directories = url.split('/')[3:-1]
+
+                    if directories:
+                        file_name = directories.pop()
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
+
         return soup.prettify()
 
     def go_to_directory(self, url):
