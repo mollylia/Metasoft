@@ -14,6 +14,12 @@ NEWSPIDER_MODULE = "fordfoundationcrawling.spiders"
 
 DEPTH_LIMIT = 5
 
+SELENIUM_DRIVER_ARGUMENTS = ["--headless=new"]
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy_selenium.SeleniumMiddleware': 800
+}
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "fordfoundationcrawling (+http://www.yourdomain.com)"
 
