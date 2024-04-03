@@ -27,13 +27,43 @@ class LillyEndowmentSpider(scrapy.Spider):
         for data in soup(['script', 'meta', 'style', 'img', 'iframe', 'button', 'input', 'select']):
             data.decompose()
 
+        # Replaces href URL with file path
+        for a in soup.findAll('a'):
+            if 'href' in a.attrs:
+                url = a['href']
+                file_path = "/lillyendowment.org"
+
+                if url == 'https://lillyendowment.org':
+                    a['href'] = f"{file_path}/index.html"
+
+                elif 'lillyendowment.org' in url:
+                    directories = url.split('/')[3:]
+                    if directories[len(directories)-1] == '':
+                        directories.pop()
+
+                    if directories:
+                        file_name = directories.pop()
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
+
+                elif url and url[0] == '/':
+                    path = url
+                    if url[-1] == '/':
+                        path = url[:-1]
+
+                    file_path += f"{path}.html"
+                    a['href'] = file_path
+
         return soup.prettify()
 
     def go_to_directory(self, url):
         os.chdir('lillyendowment.org')
         directories = url[:-1].split('/')[3:]
 
-        if (len(directories) in [0, 1]) or (directories[0] == 'cdn-cgi'):
+        if len(directories) in [0, 1]:
             return
         else:
             directories.pop()
