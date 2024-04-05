@@ -7,8 +7,20 @@ from bs4 import BeautifulSoup
 
 class FoundationSearchSpider(scrapy.Spider):
     name = 'foundationsearch'
-    allowed_domains = ['fordfoundation.org', 'lillyendowment.org']
-    start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/']
+    # allowed_domains = ['fordfoundation.org', 'lillyendowment.org']
+    # start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/']
+
+    allowed_domains = ['fordfoundation.org', 'lillyendowment.org', 'fcm.ca']
+    start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/', 'https://www.fcm.ca/en']
+
+    # allowed_domains = ['fordfoundation.org', 'lillyendowment.org', 'mastercardfdn.org', 'solitudenaturereserve.com',
+    #                    'azrielifoundation.org', 'fondationchagnon.org', 'jcfmontreal.org', 'fcm.ca',
+    #                    'vancouverfoundation.ca', 'sickkidsfoundation.com', 'giftfunds.com']
+    # start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/', 'https://mastercardfdn.org/',
+    #               'https://solitudenaturereserve.com/', 'https://azrielifoundation.org/',
+    #               'https://fondationchagnon.org/en/', 'https://jcfmontreal.org/', 'https://www.fcm.ca/en/',
+    #               'https://www.vancouverfoundation.ca/', 'https://www.sickkidsfoundation.com/',
+    #               'https://www.giftfunds.com/']
 
     def start_requests(self):
         for url in self.start_urls:
@@ -61,9 +73,12 @@ class FoundationSearchSpider(scrapy.Spider):
             html_file.write(str(content))
 
     def parse_item(self, response):
+        url = response.request.url
+        if not url.startswith(tuple(self.start_urls)):
+            return
+
         # Gets the file name for the pages
         crawl_depth = response.meta['depth']
-        url = response.request.url
         file_name = self.get_file_name(url, crawl_depth)
 
         # Gets page content
