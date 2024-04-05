@@ -14,9 +14,13 @@ class FoundationSearchSpider(scrapy.Spider):
         for url in self.start_urls:
             yield SeleniumRequest(url=url, callback=self.parse_item)
 
-    def get_file_name(self, url):
-        # TODO: update names later
-        name_split = url[:-1].split('/')
+    def get_file_name(self, url, crawl_depth):
+        if crawl_depth == 0:
+            return "index.html"
+        elif url[-1] == '/':
+            url = url[:-1]
+
+        name_split = url.split('/')
         file_name = f"{name_split.pop()}.html"
         return file_name
 
@@ -58,19 +62,21 @@ class FoundationSearchSpider(scrapy.Spider):
 
     def parse_item(self, response):
         # Gets the file name for the pages
-        url = response.request.url
-        file_name = self.get_file_name(url)
         crawl_depth = response.meta['depth']
+        url = response.request.url
+        file_name = self.get_file_name(url, crawl_depth)
 
         # Gets page content
         html_content = response.body
         content = self.get_page_content(html_content)
 
         # Saves the content in a directory corresponding to the website
-        directory = url.split('/')[2].replace('www.', '')
         os.chdir('..')
+        directory = url.split('/')[2].replace('www.', '')
+
         if not os.path.exists(directory):
             os.mkdir(directory)
+
         self.go_to_directory(url, directory)
         self.save_file(file_name, content)
         self.return_from_directory(url)
@@ -84,8 +90,10 @@ class FoundationSearchSpider(scrapy.Spider):
         # if crawl_depth < self.settings.get('DEPTH_LIMIT'):
         if crawl_depth == 0:
             soup = BeautifulSoup(html_content, 'html.parser')
+
             for domain in self.allowed_domains:
                 for link in soup.find_all('a', href=True):
                     next_url = response.urljoin(link['href'])
+
                     if domain in next_url:
                         yield SeleniumRequest(url=next_url, callback=self.parse_item)
