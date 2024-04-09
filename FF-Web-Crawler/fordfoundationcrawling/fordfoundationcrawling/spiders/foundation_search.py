@@ -10,17 +10,47 @@ class FoundationSearchSpider(scrapy.Spider):
     # allowed_domains = ['fordfoundation.org', 'lillyendowment.org']
     # start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/']
 
-    allowed_domains = ['fordfoundation.org', 'lillyendowment.org', 'fcm.ca']
-    start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/', 'https://www.fcm.ca/en']
+    allowed_domains = ['fordfoundation.org', 'lillyendowment.org', 'mastercardfdn.org', 'solitudenaturereserve.com',
+                       'azrielifoundation.org', 'fondationchagnon.org', 'jcfmontreal.org', 'fcm.ca',
+                       'vancouverfoundation.ca', 'sickkidsfoundation.com', 'giftfunds.com']
+    start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/', 'https://mastercardfdn.org/',
+                  'https://solitudenaturereserve.com/', 'https://azrielifoundation.org/',
+                  'https://fondationchagnon.org/en/', 'https://jcfmontreal.org/', 'https://www.fcm.ca/en/',
+                  'https://www.vancouverfoundation.ca/', 'https://www.sickkidsfoundation.com/',
+                  'https://www.giftfunds.com/']
 
-    # allowed_domains = ['fordfoundation.org', 'lillyendowment.org', 'mastercardfdn.org', 'solitudenaturereserve.com',
-    #                    'azrielifoundation.org', 'fondationchagnon.org', 'jcfmontreal.org', 'fcm.ca',
-    #                    'vancouverfoundation.ca', 'sickkidsfoundation.com', 'giftfunds.com']
-    # start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/', 'https://mastercardfdn.org/',
-    #               'https://solitudenaturereserve.com/', 'https://azrielifoundation.org/',
-    #               'https://fondationchagnon.org/en/', 'https://jcfmontreal.org/', 'https://www.fcm.ca/en/',
-    #               'https://www.vancouverfoundation.ca/', 'https://www.sickkidsfoundation.com/',
-    #               'https://www.giftfunds.com/']
+    # allowed_domains = ['fordfoundation.org']
+    # start_urls = ['https://www.fordfoundation.org/']
+
+    # allowed_domains = ['lillyendowment.org']
+    # start_urls = ['https://lillyendowment.org/']
+
+    # allowed_domains = ['mastercardfdn.org']
+    # start_urls = ['https://mastercardfdn.org/']
+
+    # allowed_domains = ['solitudenaturereserve.com']
+    # start_urls = ['https://solitudenaturereserve.com/']
+
+    # allowed_domains = ['azrielifoundation.org']
+    # start_urls = ['https://azrielifoundation.org/']
+
+    # allowed_domains = ['fondationchagnon.org']
+    # start_urls = ['https://fondationchagnon.org/en/']
+
+    # allowed_domains = ['jcfmontreal.org']
+    # start_urls = ['https://jcfmontreal.org/']
+
+    # allowed_domains = ['fcm.ca']
+    # start_urls = ['https://www.fcm.ca/en/']
+
+    # allowed_domains = ['vancouverfoundation.ca']
+    # start_urls = ['https://www.vancouverfoundation.ca/']
+
+    # allowed_domains = ['sickkidsfoundation.com']
+    # start_urls = ['https://www.sickkidsfoundation.com/']
+
+    # allowed_domains = ['giftfunds.com']
+    # start_urls = ['https://www.giftfunds.com/']
 
     def start_requests(self):
         for url in self.start_urls:
@@ -29,6 +59,8 @@ class FoundationSearchSpider(scrapy.Spider):
     def get_file_name(self, url, crawl_depth):
         if crawl_depth == 0:
             return "index.html"
+        elif 'email-protection' in url:
+            return "email-protection.html"
         elif url[-1] == '/':
             url = url[:-1]
 
@@ -73,8 +105,16 @@ class FoundationSearchSpider(scrapy.Spider):
             html_file.write(str(content))
 
     def parse_item(self, response):
+        # Skips parsing for unrelated redirected pages:
+        # (1) not an allowed domain
+        # (2) is a subdomain
+        # (3) contains media files
         url = response.request.url
-        if not url.startswith(tuple(self.start_urls)):
+        if not any(domain in url for domain in self.allowed_domains):
+            return
+        elif ('www.' not in url) and (any(f".{domain}" in url for domain in self.allowed_domains)):
+            return
+        elif 'wp-content' in url:
             return
 
         # Gets the file name for the pages
@@ -85,7 +125,7 @@ class FoundationSearchSpider(scrapy.Spider):
         html_content = response.body
         content = self.get_page_content(html_content)
 
-        # Saves the content in a directory corresponding to the website
+        # Saves page content in a directory corresponding to the website
         os.chdir('..')
         directory = url.split('/')[2].replace('www.', '')
 
@@ -102,13 +142,19 @@ class FoundationSearchSpider(scrapy.Spider):
             "depth": crawl_depth
         }
 
-        # if crawl_depth < self.settings.get('DEPTH_LIMIT'):
-        if crawl_depth == 0:
+        if crawl_depth < self.settings.get('DEPTH_LIMIT'):
             soup = BeautifulSoup(html_content, 'html.parser')
 
-            for domain in self.allowed_domains:
-                for link in soup.find_all('a', href=True):
-                    next_url = response.urljoin(link['href'])
+            for link in soup.find_all('a', href=True):
+                next_url = response.urljoin(link['href'])
+                languages = ['/fr', '/he']
+                substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mailto', '/fr/', '/he/']
 
-                    if domain in next_url:
-                        yield SeleniumRequest(url=next_url, callback=self.parse_item)
+                # Skips external links, filters, pdfs, and images
+                if ((next_url.startswith(tuple(self.start_urls))) and (not next_url.endswith(tuple(languages)))
+                        and (not any(substring in next_url for substring in substrings))):
+                    yield SeleniumRequest(url=next_url, callback=self.parse_item)
+
+    def closed(self, reason):
+        self.logger.info("Start time: %s", self.crawler.stats.get_value("start_time"))
+        self.logger.info("End time: %s", self.crawler.stats.get_value("stop_time"))
