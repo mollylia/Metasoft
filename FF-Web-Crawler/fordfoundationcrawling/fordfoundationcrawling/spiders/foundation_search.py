@@ -78,14 +78,33 @@ class FoundationSearchSpider(scrapy.Spider):
                 url = a['href']
                 file_path = f"/{root}/"
 
-                if any(substring in url for substring in self.substrings):        # Skips media files and other languages
-                    break
-                elif (url in self.start_urls) or (f'{url}/' in self.start_urls):  # For index pages
+                if any(substring in url for substring in self.substrings):          # Skips media files and other languages
+                    continue
+                elif (url in self.start_urls) or (f'{url}/' in self.start_urls):    # Handles URLs representing index pages
                     a['href'] = f"{file_path}index.html"
-                elif url in ['/', '/en']:                                         # For index pages
+                elif url in ['/', '/en']:                                           # Handles URLs representing index pages
                     a['href'] = f"{file_path}index.html"
-                elif 'email-protection' in url:
-                    a['href'] = f"{file_path}email-protection.html"               # For email protection pages
+                elif 'email-protection' in url:                                     # Handles URLs representing email protection pages
+                    a['href'] = f"{file_path}email-protection.html"
+
+                elif any(href in url for href in self.start_urls):                  # Handles URLs belonging to the same website
+                    if url and url[-1] == '/':
+                        url = url[:-1]
+                    directories = url.split('/')[3:]
+                    if directories:
+                        file_name = directories.pop()
+                        for directory in directories:
+                            file_path += f"{directory}/"
+
+                        file_path += f"{file_name}.html"
+                        a['href'] = file_path
+
+                elif url and url[0] == '/':                                         # Handles relative URLs within the same domain
+                    if url and url[-1] == '/':
+                        url = url[:-1]
+                    url = url[1:]
+                    file_path += f"{url}.html"
+                    a['href'] = file_path
 
         return soup.prettify()
 
