@@ -78,37 +78,30 @@ class FoundationSearchSpider(scrapy.Spider):
     def go_to_directory(self, url, root):
         os.chdir(root)
         directories = url[:-1].split('/')[3:]
-
-        if len(directories) in [0, 1]:
+        if (len(directories) in [0, 1]) or ('email-protection' in url):
             return
         else:
             directories.pop()
-
-        for directory in directories:
-            if not os.path.exists(directory):
-                os.mkdir(directory)
-            os.chdir(directory)
+            for directory in directories:
+                if not os.path.exists(directory):
+                    os.mkdir(directory)
+                os.chdir(directory)
 
     def return_from_directory(self, url):
         directories = url[:-1].split('/')[3:]
-
-        if len(directories) in [0, 1]:
+        if (len(directories) in [0, 1]) or ('email-protection' in url):
             return
         else:
             directories.pop()
-
-        for directory in range(len(directories)):
-            os.chdir('..')
+            for directory in range(len(directories)):
+                os.chdir('..')
 
     def save_file(self, file_name, content):
         with open(file_name, 'w') as html_file:
             html_file.write(str(content))
 
     def parse_item(self, response):
-        # Skips parsing for unrelated redirected pages:
-        # (1) not an allowed domain
-        # (2) is a subdomain
-        # (3) contains media files
+        # Skips parsing for unrelated redirected pages: not an allowed domain, is a subdomain, or contains media files
         url = response.request.url
         if not any(domain in url for domain in self.allowed_domains):
             return
@@ -154,7 +147,3 @@ class FoundationSearchSpider(scrapy.Spider):
                 if ((next_url.startswith(tuple(self.start_urls))) and (not next_url.endswith(tuple(languages)))
                         and (not any(substring in next_url for substring in substrings))):
                     yield SeleniumRequest(url=next_url, callback=self.parse_item)
-
-    def closed(self, reason):
-        self.logger.info("Start time: %s", self.crawler.stats.get_value("start_time"))
-        self.logger.info("End time: %s", self.crawler.stats.get_value("stop_time"))
