@@ -70,7 +70,7 @@ class FoundationSearchSpider(scrapy.Spider):
 
     def get_page_content(self, html):
         soup = BeautifulSoup(html, 'html.parser')
-        for data in soup(['script']):
+        for data in soup(['script', 'meta', 'style', 'img', 'picture', 'figure', 'video', 'iframe', 'input', 'button', 'select']):
             data.decompose()
 
         return soup.prettify()
