@@ -1,4 +1,5 @@
 import os.path
+import datetime
 import scrapy
 
 from scrapy_selenium import SeleniumRequest
@@ -17,6 +18,17 @@ class FoundationSearchSpider(scrapy.Spider):
               'https://www.giftfunds.com/']
 
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mailto', '/fr/', '/he/']
+    starting_time = datetime.datetime.now()
+    ending_time = starting_time
+
+    def __init__(self, name=None, **kwargs):
+        super().__init__(name=name, **kwargs)
+        self.start_time = datetime.datetime.now()
+
+    def closed(self, response):
+        self.ending_time = datetime.datetime.now()
+        duration = (self.ending_time - self.starting_time).total_seconds()
+        print(f"Time for spider to complete: {str(duration)} seconds")
 
     def start_requests(self):
         for url in self.start_urls:
