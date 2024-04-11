@@ -11,6 +11,8 @@ class FoundationSearchSpider(scrapy.Spider):
     name = 'foundationsearch'
     allowed_domains = []
     start_urls = []
+
+    foundation_dictionary = {}
     csv_file = 'FS.CA-Top3-URLs.csv'
 
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mailto', '/fr/', '/he/']
@@ -23,6 +25,7 @@ class FoundationSearchSpider(scrapy.Spider):
         self.load_csv()
         # print(self.start_urls)
         # print(self.allowed_domains)
+        # print(self.foundation_dictionary)
 
     def closed(self, response):
         self.ending_time = datetime.datetime.now()
@@ -35,8 +38,14 @@ class FoundationSearchSpider(scrapy.Spider):
             csv_reader = csv.reader(file)
             next(csv_reader)                        # Skips the header row
             for row in csv_reader:
-                self.start_urls.append(row[0])
-                self.allowed_domains.append(row[0].split('/')[2].replace('www.', ''))
+                # Populates start_urls and allowed_domains
+                url = row[0]
+                domain = url.split('/')[2].replace('www.', '')
+                self.start_urls.append(url)
+                self.allowed_domains.append(domain)
+
+                # Populates foundation_dictionary with domain as key and a list of values (domain: [id, url, counter])
+                self.foundation_dictionary[domain] = [row[1], url, 0]
 
     def start_requests(self):
         for url in self.start_urls:
@@ -53,7 +62,7 @@ class FoundationSearchSpider(scrapy.Spider):
             return
 
         os.chdir('..')
-        directory = url.split('/')[2].replace('www.', '')
+        directory = self.get_directory(url)
 
         if not os.path.exists(directory):
             os.mkdir(directory)
@@ -89,6 +98,11 @@ class FoundationSearchSpider(scrapy.Spider):
                 if ((any(domain in url for domain in self.allowed_domains)) and (not next_url.endswith(tuple(languages)))
                         and (not any(substring in next_url for substring in self.substrings))):
                     yield SeleniumRequest(url=next_url, callback=self.parse_item)
+
+    def get_directory(self, url):
+        domain = url.split('/')[2].replace('www.', '')
+        directory = self.foundation_dictionary[domain][0]
+        return directory
 
     def get_file_name(self, url, crawl_depth):
         if crawl_depth == 0:
