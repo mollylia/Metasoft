@@ -1,6 +1,7 @@
 import os.path
 import datetime
 import scrapy
+import csv
 
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
@@ -8,14 +9,9 @@ from bs4 import BeautifulSoup
 
 class FoundationSearchSpider(scrapy.Spider):
     name = 'foundationsearch'
-    allowed_domains = ['fordfoundation.org', 'lillyendowment.org', 'mastercardfdn.org', 'solitudenaturereserve.com',
-                       'azrielifoundation.org', 'fondationchagnon.org', 'jcfmontreal.org', 'fcm.ca',
-                       'vancouverfoundation.ca', 'sickkidsfoundation.com', 'giftfunds.com']
-    start_urls = ['https://www.fordfoundation.org/', 'https://lillyendowment.org/', 'https://mastercardfdn.org/',
-              'https://solitudenaturereserve.com/', 'https://azrielifoundation.org/',
-              'https://fondationchagnon.org/en/', 'https://jcfmontreal.org/', 'https://www.fcm.ca/en/',
-              'https://www.vancouverfoundation.ca/', 'https://www.sickkidsfoundation.com/',
-              'https://www.giftfunds.com/']
+    allowed_domains = []
+    start_urls = []
+    csv_file = 'FS.CA-Top3-URLs.csv'
 
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mailto', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
@@ -24,11 +20,23 @@ class FoundationSearchSpider(scrapy.Spider):
     def __init__(self, name=None, **kwargs):
         super().__init__(name=name, **kwargs)
         self.start_time = datetime.datetime.now()
+        self.load_csv()
+        # print(self.start_urls)
+        # print(self.allowed_domains)
 
     def closed(self, response):
         self.ending_time = datetime.datetime.now()
         duration = (self.ending_time - self.starting_time).total_seconds()
         print(f"Time for spider to complete: {str(duration)} seconds")
+
+    def load_csv(self):
+        csv_file = os.path.join(os.path.dirname(__file__), '..', 'data', self.csv_file)
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.reader(file)
+            next(csv_reader)                        # Skips the header row
+            for row in csv_reader:
+                self.start_urls.append(row[0])
+                self.allowed_domains.append(row[0].split('/')[2].replace('www.', ''))
 
     def start_requests(self):
         for url in self.start_urls:
@@ -77,7 +85,8 @@ class FoundationSearchSpider(scrapy.Spider):
                 languages = ['/fr', '/he']
 
                 # Skips external links, filters, pdfs, and images
-                if ((next_url.startswith(tuple(self.start_urls))) and (not next_url.endswith(tuple(languages)))
+                # (next_url.startswith(tuple(self.start_urls)))
+                if ((any(domain in url for domain in self.allowed_domains)) and (not next_url.endswith(tuple(languages)))
                         and (not any(substring in next_url for substring in self.substrings))):
                     yield SeleniumRequest(url=next_url, callback=self.parse_item)
 
