@@ -32,9 +32,15 @@ class FoundationSearchSpider(scrapy.Spider):
             yield SeleniumRequest(url=url, callback=self.parse_item)
 
     def parse_item(self, response):
-        # Skips parsing for unrelated redirected pages: not an allowed domain, is a subdomain, or contains media files
         url = response.request.url
         domain = url.split('/')[2].replace('www.', '')
+
+        if (response.status == 403) and (domain in self.allowed_domains):
+            self.allowed_domains.remove(domain)
+            self.foundation_dictionary[domain][2] = -1
+            return
+
+        # Skips parsing for unrelated redirected pages: not an allowed domain, is a subdomain, or contains media files
         if not any(domain in url for domain in self.allowed_domains):
             return
         elif ('www.' not in url) and (any(f".{domain}" in url for domain in self.allowed_domains)):

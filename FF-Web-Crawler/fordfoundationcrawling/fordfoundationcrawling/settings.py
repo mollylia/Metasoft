@@ -20,6 +20,8 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy_selenium.SeleniumMiddleware': 800
 }
 
+HTTPERROR_ALLOWED_CODES = [403]
+
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "fordfoundationcrawling (+http://www.yourdomain.com)"
 
