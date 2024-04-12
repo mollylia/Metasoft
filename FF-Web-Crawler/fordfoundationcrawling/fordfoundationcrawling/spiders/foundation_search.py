@@ -29,21 +29,6 @@ class FoundationSearchSpider(scrapy.Spider):
         duration = (self.ending_time - self.starting_time).total_seconds()
         print(f"Time for spider to complete: {str(duration)} seconds")
 
-    def load_csv(self):
-        csv_file = os.path.join(os.path.dirname(__file__), '..', 'data', self.csv_file)
-        with open(csv_file, 'r') as file:
-            csv_reader = csv.reader(file)
-            next(csv_reader)                        # Skips the header row
-            for row in csv_reader:
-                # Populates start_urls and allowed_domains
-                url = row[0]
-                domain = url.split('/')[2].replace('www.', '')
-                self.start_urls.append(url)
-                self.allowed_domains.append(domain)
-
-                # Populates foundation_dictionary with domain as key and a list of values (domain: [id, url, counter])
-                self.foundation_dictionary[domain] = [row[1], url, 0]
-
     def start_requests(self):
         for url in self.start_urls:
             yield SeleniumRequest(url=url, callback=self.parse_item)
@@ -98,6 +83,21 @@ class FoundationSearchSpider(scrapy.Spider):
                 if ((any(domain in url for domain in self.allowed_domains)) and (not next_url.endswith(tuple(languages)))
                         and (not any(substring in next_url for substring in self.substrings))):
                     yield SeleniumRequest(url=next_url, callback=self.parse_item)
+
+    def load_csv(self):
+        csv_file = os.path.join(os.path.dirname(__file__), '..', 'data', self.csv_file)
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.reader(file)
+            next(csv_reader)                        # Skips the header row
+            for row in csv_reader:
+                # Populates start_urls and allowed_domains
+                url = row[0]
+                domain = url.split('/')[2].replace('www.', '')
+                self.start_urls.append(url)
+                self.allowed_domains.append(domain)
+
+                # Populates foundation_dictionary with domain as key and a list of values (domain: [id, url, counter])
+                self.foundation_dictionary[domain] = [row[1], url, 0]
 
     def get_file_name(self, url, crawl_depth):
         if crawl_depth == 0:
