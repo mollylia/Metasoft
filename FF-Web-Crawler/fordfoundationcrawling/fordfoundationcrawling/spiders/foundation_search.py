@@ -25,9 +25,7 @@ class FoundationSearchSpider(scrapy.Spider):
         self.load_csv()
 
     def closed(self, response):
-        self.ending_time = datetime.datetime.now()
-        duration = (self.ending_time - self.starting_time).total_seconds()
-        print(f"Time for spider to complete: {str(duration)} seconds")
+        self.write_summary()
 
     def start_requests(self):
         for url in self.start_urls:
@@ -98,6 +96,19 @@ class FoundationSearchSpider(scrapy.Spider):
 
                 # Populates foundation_dictionary with domain as key and a list of values (domain: [id, url, counter])
                 self.foundation_dictionary[domain] = [row[1], url, 0]
+
+    def write_summary(self):
+        os.chdir('..')
+        fields = ['OrgID', 'URL', 'NumPagesCrawled']
+        with open('result-summary.csv', 'w') as file:
+            csvwriter = csv.writer(file)
+            csvwriter.writerow(fields)
+            for key in self.foundation_dictionary.keys():
+                csvwriter.writerow(self.foundation_dictionary[key])
+
+            self.ending_time = datetime.datetime.now()
+            duration = (self.ending_time - self.starting_time).total_seconds()
+            file.write(f"\nTime for spider to complete: {str(duration)} seconds")
 
     def get_file_name(self, url, crawl_depth):
         if crawl_depth == 0:
