@@ -4,6 +4,7 @@ import scrapy
 import csv
 
 from scrapy_selenium import SeleniumRequest
+from scrapy.exceptions import IgnoreRequest
 from bs4 import BeautifulSoup
 
 
@@ -11,11 +12,14 @@ class FoundationSearchSpider(scrapy.Spider):
     name = 'foundationsearch'
     allowed_domains = []
     start_urls = []
-
     foundation_dictionary = {}
-    csv_file = 'FS.CA-Top3-URLs.csv'
 
-    substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mailto', '/fr/', '/he/']
+    # csv_file = 'FS.CA-Top3-URLs.csv'
+    # csv_file = 'FS.CA-Top3-URLs-with-invalid.csv'
+    # csv_file = 'FS.CA-Top3-URLs-403.csv'
+    csv_file = 'FS.CA-Initial-12-URLs.csv'
+
+    substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mail', 'tel', 'fax', 'javascript', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
     ending_time = starting_time
 
@@ -29,16 +33,29 @@ class FoundationSearchSpider(scrapy.Spider):
 
     def start_requests(self):
         for url in self.start_urls:
-            yield SeleniumRequest(url=url, callback=self.parse_item)
+            yield SeleniumRequest(url=url, callback=self.parse_item, errback=self.handle_error, meta={'url': url})
+
+    def handle_error(self, failure):
+        self.logger.error('ERROR!!')
+        self.logger.error(repr(failure))
+
+        url = failure.request.meta['url']
+        domain = url.split('/')[2].replace('www.', '')
+
+        if domain in self.allowed_domains:
+            self.allowed_domains.remove(domain)
+            self.foundation_dictionary[domain][2] = -1
+            raise IgnoreRequest(f"Ignoring subsequent requests related to {url}")
 
     def parse_item(self, response):
         url = response.request.url
         domain = url.split('/')[2].replace('www.', '')
+        print(f"domain: {domain}")
 
-        if (response.status == 403) and (domain in self.allowed_domains):
-            self.allowed_domains.remove(domain)
-            self.foundation_dictionary[domain][2] = -1
-            return
+        # if (response.status == 403) and (domain in self.allowed_domains):
+        #     self.allowed_domains.remove(domain)
+        #     self.foundation_dictionary[domain][2] = -1
+        #     return
 
         # Skips parsing for unrelated redirected pages: not an allowed domain, is a subdomain, or contains media files
         if not any(domain in url for domain in self.allowed_domains):
@@ -95,7 +112,11 @@ class FoundationSearchSpider(scrapy.Spider):
             next(csv_reader)                        # Skips the header row
             for row in csv_reader:
                 # Populates start_urls and allowed_domains
-                url = row[0]
+                if 'http' not in row[0]:
+                    url = f'http://{row[0]}'
+                else:
+                    url = row[0]
+
                 domain = url.split('/')[2].replace('www.', '')
                 self.start_urls.append(url)
                 self.allowed_domains.append(domain)
