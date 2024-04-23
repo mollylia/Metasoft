@@ -14,15 +14,7 @@ class FoundationSearchSpider(scrapy.Spider):
     start_urls = []
     foundation_dictionary = {}
 
-    # csv_file = 'FS.CA-Top3-URLs.csv'
-    # csv_file = 'FS.CA-Top3-URLs-with-invalid.csv'
-    # csv_file = 'FS.CA-Top3-URLs-403.csv'
-    # csv_file = 'FS.CA-Initial-12-URLs.csv'
-    # csv_file = 'FS.CA-Top20-URLs.csv'
-    # csv_file = 'FS.CA-Top10.1-URLs.csv'
-    csv_file = 'FS.CA-tgwhf.csv'
-
-    handle_httpstatus_list = [301]
+    csv_file = 'FS.CA-Top10.2-URLs.csv'
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mail', 'tel', 'fax', 'javascript', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
     ending_time = starting_time
@@ -42,7 +34,6 @@ class FoundationSearchSpider(scrapy.Spider):
             yield SeleniumRequest(url=url, callback=self.parse_item, errback=self.handle_error, meta={'url': url})
 
     def handle_error(self, failure):
-        self.logger.error('ERROR!!')
         self.logger.error(repr(failure))
         url = failure.request.meta['url']
         domain = url.split('/')[2].replace('www.', '')
@@ -57,16 +48,12 @@ class FoundationSearchSpider(scrapy.Spider):
         domain = url.split('/')[2].replace('www.', '')
         crawl_depth = response.meta['depth']
 
-        if ':' in domain:
-            domain = domain.split(':')[0]
-
-        if (response.status == 301) and (domain not in self.allowed_domains) and (crawl_depth == 0):
-            print("  301 REDIRECT!!")
-            self.allowed_domains.append(domain)
+        if (crawl_depth == 0) and (domain not in self.allowed_domains):
             url_original = response.meta['url']
             domain_original = url_original.split('/')[2].replace('www.', '')
-            self.foundation_dictionary[domain] = self.foundation_dictionary[domain_original]
-            del self.foundation_dictionary[domain_original]
+            self.allowed_domains.remove(domain_original)
+            self.foundation_dictionary[domain_original][2] = -1
+            raise IgnoreRequest(f"301: Ignoring subsequent requests related to {url_original}")
 
         elif (response.status == 403) and (domain in self.allowed_domains):
             self.allowed_domains.remove(domain)
@@ -74,7 +61,7 @@ class FoundationSearchSpider(scrapy.Spider):
             raise IgnoreRequest(f"403: Ignoring subsequent requests related to {url}")
 
         # Skips parsing for unrelated redirected pages: not an allowed domain, is a subdomain, or contains media files
-        if not any(domain in url for domain in self.allowed_domains):
+        if domain not in self.allowed_domains:
             return
         elif ('www.' not in url) and (any(f".{domain}" in url for domain in self.allowed_domains)):
             return
