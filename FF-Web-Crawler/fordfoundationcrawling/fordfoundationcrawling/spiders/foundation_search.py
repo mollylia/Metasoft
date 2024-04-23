@@ -52,12 +52,12 @@ class FoundationSearchSpider(scrapy.Spider):
             url_original = response.meta['url']
             domain_original = url_original.split('/')[2].replace('www.', '')
             self.allowed_domains.remove(domain_original)
-            self.foundation_dictionary[domain_original][2] = -1
+            self.foundation_dictionary[domain_original][2] = -301
             raise IgnoreRequest(f"301: Ignoring subsequent requests related to {url_original}")
 
         elif (response.status == 403) and (domain in self.allowed_domains):
             self.allowed_domains.remove(domain)
-            self.foundation_dictionary[domain][2] = -1
+            self.foundation_dictionary[domain][2] = -403
             raise IgnoreRequest(f"403: Ignoring subsequent requests related to {url}")
 
         # Skips parsing for unrelated redirected pages: not an allowed domain, is a subdomain, or contains media files
