@@ -153,9 +153,11 @@ class FoundationSearchSpider(scrapy.Spider):
         elif url[-1] == '/':
             url = url[:-1]
 
-        name_split = url.split('/')
-        file_name = f"{name_split.pop()}.html"
-        return file_name
+        file_name = url.split('/').pop()
+        if '.html' in file_name:
+            return file_name
+        else:
+            return f"{file_name}.html"
 
     def get_page_content(self, html, root):
         soup = BeautifulSoup(html, 'html.parser')
