@@ -14,7 +14,7 @@ class FoundationSearchSpider(scrapy.Spider):
     start_urls = []
     foundation_dictionary = {}
 
-    csv_file = 'FS.CA-Top10.2-URLs.csv'
+    csv_file = 'FS.CA-Top10.3-URLs.csv'
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', 'mail', 'tel', 'fax', 'javascript', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
     ending_time = starting_time
@@ -205,9 +205,10 @@ class FoundationSearchSpider(scrapy.Spider):
         else:
             directories.pop()
             for directory in directories:
-                if not os.path.exists(directory):
-                    os.mkdir(directory)
-                os.chdir(directory)
+                if not directory == '':
+                    if not os.path.exists(directory):
+                        os.mkdir(directory)
+                    os.chdir(directory)
 
     def return_from_directory(self, url):
         directories = url[:-1].split('/')[3:]
