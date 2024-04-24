@@ -16,7 +16,7 @@ class FoundationSearchSpider(scrapy.Spider):
 
     # csv_file = 'FS.CA-Top10.3-URLs.csv'
     csv_file = 'FS.CA-concordia.csv'
-    substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', '/fr/', '/he/']
+    substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
     ending_time = None
 
@@ -120,7 +120,7 @@ class FoundationSearchSpider(scrapy.Spider):
             for row in csv_reader:
                 # Populates start_urls and allowed_domains
                 if 'http' not in row[0]:
-                    url = f'http://{row[0]}'
+                    url = f'https://{row[0]}'
                 else:
                     url = row[0]
 
