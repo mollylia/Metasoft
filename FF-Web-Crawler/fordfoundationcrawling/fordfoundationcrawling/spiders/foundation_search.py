@@ -18,11 +18,10 @@ class FoundationSearchSpider(scrapy.Spider):
     csv_file = 'FS.CA-concordia.csv'
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
-    ending_time = starting_time
+    ending_time = None
 
     def __init__(self, name=None, **kwargs):
         super().__init__(name=name, **kwargs)
-        self.start_time = datetime.datetime.now()
         self.load_csv()
         print(f"allowed domains: {self.allowed_domains}")
         print(f"start urls: {self.start_urls}")
