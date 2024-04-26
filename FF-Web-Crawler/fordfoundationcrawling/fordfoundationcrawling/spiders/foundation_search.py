@@ -218,8 +218,9 @@ class FoundationSearchSpider(scrapy.Spider):
             return
         else:
             directories.pop()
-            for directory in range(len(directories)):
-                os.chdir('..')
+            for directory in directories:
+                if not directory == '':
+                    os.chdir('..')
 
     def save_file(self, file_name, content):
         with open(file_name, 'w') as html_file:
