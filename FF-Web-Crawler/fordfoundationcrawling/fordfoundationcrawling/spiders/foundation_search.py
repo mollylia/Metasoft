@@ -14,8 +14,7 @@ class FoundationSearchSpider(scrapy.Spider):
     start_urls = []
     foundation_dictionary = {}
 
-    # csv_file = 'FS.CA-Top10.3-URLs.csv'
-    csv_file = 'FS.CA-concordia.csv'
+    csv_file = 'FS.CA-Top10.3-URLs.csv'
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
     ending_time = None
@@ -42,6 +41,9 @@ class FoundationSearchSpider(scrapy.Spider):
             self.allowed_domains.remove(domain)
             self.foundation_dictionary[domain][2] = -1
             raise IgnoreRequest(f"Ignoring subsequent requests related to {url}")
+
+    def handle_exception(self, failure):
+        self.logger.error(repr(failure))
 
     def parse_item(self, response):
         url = response.request.url
@@ -110,7 +112,7 @@ class FoundationSearchSpider(scrapy.Spider):
                 # Skips external links, filters, pdfs, and images
                 if ((next_url.startswith('http')) and (any(domain in url for domain in self.allowed_domains)) and
                         (not next_url.endswith(tuple(languages))) and (not any(substring in next_url for substring in self.substrings))):
-                    yield SeleniumRequest(url=next_url, callback=self.parse_item)
+                    yield SeleniumRequest(url=next_url, callback=self.parse_item, errback=self.handle_exception)
 
     def load_csv(self):
         csv_file = os.path.join(os.path.dirname(__file__), '..', 'data', self.csv_file)
