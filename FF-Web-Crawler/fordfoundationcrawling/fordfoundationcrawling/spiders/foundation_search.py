@@ -111,8 +111,13 @@ class FoundationSearchSpider(scrapy.Spider):
 
                 # Skips external links, filters, pdfs, and images
                 if ((next_url.startswith('http')) and (any(domain in url for domain in self.allowed_domains)) and
-                        (not next_url.endswith(tuple(languages))) and (not any(substring in next_url for substring in self.substrings))):
-                    yield SeleniumRequest(url=next_url, callback=self.parse_item, errback=self.handle_exception)
+                        (not self.is_subdomain(next_url)) and (not next_url.endswith(tuple(languages))) and
+                        (not any(substring in next_url.casefold() for substring in self.substrings))):
+                    try:
+                        yield SeleniumRequest(url=next_url, callback=self.parse_item, errback=self.handle_exception)
+                    except ValueError as e:
+                        print(f"Value error: {e}")
+                        continue
 
     def load_csv(self):
         csv_file = os.path.join(os.path.dirname(__file__), '..', 'data', self.csv_file)
@@ -229,3 +234,12 @@ class FoundationSearchSpider(scrapy.Spider):
     def save_file(self, file_name, content):
         with open(file_name, 'w') as html_file:
             html_file.write(str(content))
+
+    def is_subdomain(self, url):
+        domain = url.split('/')
+        if len(domain) >= 3:
+            domain = domain[2].split('.')
+            if len(domain) >= 3:
+                return not domain[len(domain)-3] == 'www'
+
+        return False
