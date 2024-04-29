@@ -187,6 +187,7 @@ class FoundationSearchSpider(scrapy.Spider):
                     if directories:
                         file_name = directories.pop()
                         for directory in directories:
+                            directory.replace('.html', '')
                             file_path += f"{directory}/"
 
                         file_path += f"{file_name}.html"
@@ -210,6 +211,7 @@ class FoundationSearchSpider(scrapy.Spider):
             directories.pop()
             for directory in directories:
                 if not directory == '':
+                    directory = directory.replace('.html', '')
                     if not os.path.exists(directory):
                         os.mkdir(directory)
                     os.chdir(directory)
