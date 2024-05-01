@@ -14,7 +14,7 @@ class FoundationSearchSpider(scrapy.Spider):
     start_urls = []
     foundation_dictionary = {}
 
-    csv_file = 'FS.CA-Top10.3-URLs.csv'
+    csv_file = 'FS.CA-Top100-URLs.csv'
     substrings = ['?', 'pdf', 'png', 'jpg', 'jpeg', 'mp3', 'mp4', 'xlsx', 'docx', 'pptx', 'zip', '/fr/', '/he/']
     starting_time = datetime.datetime.now()
     ending_time = None

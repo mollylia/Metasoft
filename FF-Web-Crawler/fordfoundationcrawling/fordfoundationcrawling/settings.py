@@ -12,7 +12,7 @@ BOT_NAME = "fordfoundationcrawling"
 SPIDER_MODULES = ["fordfoundationcrawling.spiders"]
 NEWSPIDER_MODULE = "fordfoundationcrawling.spiders"
 
-DEPTH_LIMIT = 5
+DEPTH_LIMIT = 6
 
 SELENIUM_DRIVER_ARGUMENTS = ["--headless=new"]
 
@@ -27,6 +27,10 @@ HTTPERROR_ALLOWED_CODES = [403, 429]
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+# Configure a destination for log messages
+LOG_STDOUT = True
+LOG_FILE = 'scrapy_output.txt'
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
