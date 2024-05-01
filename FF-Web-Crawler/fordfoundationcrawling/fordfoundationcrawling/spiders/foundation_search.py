@@ -115,8 +115,8 @@ class FoundationSearchSpider(scrapy.Spider):
                         (not any(substring in next_url.casefold() for substring in self.substrings))):
                     try:
                         yield SeleniumRequest(url=next_url, callback=self.parse_item, errback=self.handle_exception)
-                    except ValueError as e:
-                        print(f"Value error: {e}")
+                    except Exception as e:
+                        print(f"An error has occurred: {e}")
                         continue
 
     def load_csv(self):
